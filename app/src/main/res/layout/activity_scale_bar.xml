@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityScaleBar">
+
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.an.view.ScaleBar
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            app:scale_color="#9C27B0"
+            app:orientation="vertical"
+            app:bar_color="#80FF5722"
+            />
+
+        <com.an.view.ScaleBar
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            app:scale_color="#673AB7"
+            app:orientation="vertical"
+            app:bar_color="#330B2DEB"
+            app:title="质量"
+            />
+
+        <com.an.view.ScaleBar
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            app:scale_color="#0E0D0D"
+            app:orientation="vertical"
+            app:bar_color="#80FFEB3B"
+            app:title="电平"
+            app:max_value="120"
+            app:min_value="-20"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.an.view.ScaleBar
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                app:scale_color="#09F50D"
+                app:orientation="horizontal"
+                app:bar_color="#8000BCD4"
+                app:title="测试"
+                app:title_height="120"
+                />
+
+            <com.an.view.ScaleBar
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                app:scale_color="#0930F5"
+                app:orientation="horizontal"
+                app:bar_color="#80E91E63"
+                app:title_height="50"
+                app:title=" "
+                />
+
+            <com.an.view.ScaleBar
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                app:scale_color="#2196F3"
+                app:orientation="horizontal"
+                app:bar_color="#8009F012"
+                app:title_height="100"
+                app:title="电平"
+                app:max_value="120"
+                app:min_value="-20"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

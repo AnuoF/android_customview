@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ScaleBar">
+        <!--刻度颜色-->
+        <attr name="scale_color" format="color"/>
+        <!--刻度条颜色-->
+        <attr name="bar_color" format="color"/>
+        <!--刻度最大值-->
+        <attr name="max_value" format="integer"/>
+        <!--最小值-->
+        <attr name="min_value" format="integer"/>
+        <!--几等分-->
+        <attr name="scale_count" format="integer"/>
+        <!--标题-->
+        <attr name="title" format="string"/>
+        <!--标题预留的空间-->
+        <attr name="title_height" format="integer"/>
+
+        <!--方向：水平、垂直-->
+        <attr name="orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+
+    </declare-styleable>
+
+</resources>
