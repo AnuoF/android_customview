@@ -34,6 +34,7 @@
             />
 
         <com.an.view.ScaleBar
+            android:id="@+id/scale_bar"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"

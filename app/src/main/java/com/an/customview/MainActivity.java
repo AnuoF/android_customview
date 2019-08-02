@@ -1,11 +1,14 @@
 package com.an.customview;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.an.view.ScaleBar;
 
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_scale_bar:
-                startActivity(new Intent(MainActivity.this, ScaleBar.class));
+                startActivity(new Intent(this, ActivityScaleBar.class));
                 break;
 
             default:
