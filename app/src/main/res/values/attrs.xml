@@ -25,4 +25,17 @@
 
     </declare-styleable>
 
+
+    <declare-styleable name="CompassView">
+        <!--Marker的颜色-->
+        <attr name="marker_color" format="color"/>
+        <!--Text的颜色-->
+        <attr name="text_color" format="color"/>
+        <!--大圆的颜色-->
+        <attr name="circle_color" format="color"/>
+        <!--中心园的颜色-->
+        <attr name="center_circle_color" format="color"/>
+
+    </declare-styleable>
+
 </resources>

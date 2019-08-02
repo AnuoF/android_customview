@@ -1,16 +1,12 @@
 package com.an.customview;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
 
-import com.an.view.ScaleBar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         Button btnScaleBar = (Button) findViewById(R.id.btn_scale_bar);
         btnScaleBar.setOnClickListener(this);
+        Button btnCompassView = (Button) findViewById(R.id.btn_compass_view);
+        btnCompassView.setOnClickListener(this);
     }
 
     @Override
@@ -32,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.btn_scale_bar:
                 startActivity(new Intent(this, ActivityScaleBar.class));
+                break;
+            case R.id.btn_compass_view:
+                startActivity(new Intent(this, ActivityCompassView.class));
                 break;
 
             default:

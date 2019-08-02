@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    tools:context=".ActivityCompassView">
+
+    <com.an.view.CompassView
+        android:id="@+id/compass_view1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:circle_color="#802196F3"
+        app:center_circle_color="#03A9F4"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.an.view.CompassView
+            android:id="@+id/compass_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:circle_color="#0D9C27B0"
+            app:text_color="#F70606"
+            app:marker_color="#03A9F4"
+            app:center_circle_color="#E91E63"
+            />
+
+        <com.an.view.CompassView
+            android:id="@+id/compass_view3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:circle_color="#0D9C27B0"
+            app:center_circle_color="#4DF008"
+            />
+    </LinearLayout>
+</LinearLayout>
