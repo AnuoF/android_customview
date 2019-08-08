@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnScaleBar.setOnClickListener(this);
         Button btnCompassView = (Button) findViewById(R.id.btn_compass_view);
         btnCompassView.setOnClickListener(this);
+        Button btnProgressBar = (Button) findViewById(R.id.btn_progress_bar);
+        btnProgressBar.setOnClickListener(this);
     }
 
     @Override
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_compass_view:
                 startActivity(new Intent(this, ActivityCompassView.class));
+                break;
+            case R.id.btn_progress_bar:
+                startActivity(new Intent(this, ActivityProgressBar.class));
                 break;
 
             default:

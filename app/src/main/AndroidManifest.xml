@@ -9,8 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityCompassView" android:label="CompassView"></activity>
-        <activity android:name=".ActivityScaleBar" android:label="ScaleBar"/>
+        <activity
+            android:name=".ActivityProgressBar"
+            android:label="ProgressBar"></activity>
+        <activity
+            android:name=".ActivityCompassView"
+            android:label="CompassView" />
+        <activity
+            android:name=".ActivityScaleBar"
+            android:label="ScaleBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

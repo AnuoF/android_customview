@@ -19,6 +19,9 @@ import android.view.View;
 
 import com.an.customview.R;
 
+/**
+ * 自定义罗盘、指南针控件，用于显示方位角
+ */
 public class CompassView extends View {
 
     private float _bearing = 0;   // 显示的方向

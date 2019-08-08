@@ -16,13 +16,11 @@
         <attr name="title" format="string"/>
         <!--标题预留的空间-->
         <attr name="title_height" format="integer"/>
-
         <!--方向：水平、垂直-->
         <attr name="orientation">
             <enum name="horizontal" value="0" />
             <enum name="vertical" value="1" />
         </attr>
-
     </declare-styleable>
 
 
@@ -35,7 +33,24 @@
         <attr name="circle_color" format="color"/>
         <!--中心园的颜色-->
         <attr name="center_circle_color" format="color"/>
+    </declare-styleable>
 
+    <declare-styleable name="ProgressBar">
+        <!--边框的颜色-->
+        <attr name="border_color" format="color"/>
+        <!--边框的粗细-->
+        <attr name="border_size" format="integer"/>
+        <!--矩形的颜色-->
+        <attr name="rect_color" format="color"/>
+        <!--文本的颜色-->
+        <attr name="text_color_p" format="color"/>
+        <!--文本大小-->
+        <attr name="text_size" format="integer"/>
+        <!--方向：水平、垂直-->
+        <attr name="orientation_p">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
     </declare-styleable>
 
 </resources>

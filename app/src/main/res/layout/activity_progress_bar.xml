@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ActivityProgressBar">
+
+    <com.an.view.ProgressBar
+        android:layout_marginTop="10dp"
+        android:id="@+id/progress_bar1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        />
+
+    <com.an.view.ProgressBar
+        android:layout_marginTop="10dp"
+        android:id="@+id/progress_bar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#80009688"
+        app:border_color="#0930F5"
+        app:rect_color="#802196F3"
+        app:text_size="50"
+        app:border_size="5"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <com.an.view.ProgressBar
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/progress_bar3"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#319C27B0"
+            app:border_color="#9C27B0"
+            app:rect_color="#80E91E63"
+            app:text_size="60"
+            app:text_color_p="#0943F1"
+            app:orientation_p="vertical"
+            app:border_size="10"
+            />
+
+        <com.an.view.ProgressBar
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/progress_bar4"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="#3131F506"
+            app:border_color="#E91E63"
+            app:rect_color="#8003A9F4"
+            app:text_size="60"
+            app:text_color_p="#F44336"
+            app:orientation_p="vertical"
+            app:border_size="5"
+            />
+    </LinearLayout>
+</LinearLayout>
