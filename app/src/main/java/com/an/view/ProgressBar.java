@@ -34,7 +34,7 @@ public class ProgressBar extends View {
     private Paint _paint;             // 画笔
     private int _width;
     private int _height;
-    private int _value = 0;
+    private int _value = 50;
     private int _maxValue = 100;
     private int _minValue = 0;
 
