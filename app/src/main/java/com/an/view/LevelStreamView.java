@@ -1,10 +1,11 @@
 /**
  * @Title: LevelStreamView.java
- * @Package com.an.view
+ * @Package: com.an.view
  * @Description: 自定义电平流图形控件
- * @author AnuoF
- * @date 2019.08.09 08:31
- * @version V1.0
+ * @Author: AnuoF
+ * @QQ/WeChat: 188512936
+ * @Date: 2019.08.09 08:31
+ * @Version: V1.0
  */
 
 package com.an.view;

@@ -1,10 +1,11 @@
 /**
  * @Title: ScaleBar.java
- * @Package com.an.view
- * @Description: 刻度条控件
- * @author AnuoF
- * @date 2019.08.01 20:00
- * @version V1.0
+ * @Package: com.an.view
+ * @Description: 自定义刻度条控件
+ * @Author: AnuoF
+ * @QQ/WeChat: 188512936
+ * @Date: 2019.08.01 20:00
+ * @Version: V1.0
  */
 
 package com.an.view;

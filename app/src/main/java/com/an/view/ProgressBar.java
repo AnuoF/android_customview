@@ -1,10 +1,11 @@
 /**
  * @Title: ProgressBar.java
- * @Package com.an.view
- * @Description: 进度条控件
- * @author AnuoF
- * @date 2019.08.08 14:05
- * @version V1.0
+ * @Package: com.an.view
+ * @Description: 自定义进度条控件
+ * @Author: AnuoF
+ * @QQ/WeChat: 188512936
+ * @Date: 2019.08.08 14:05
+ * @Version: V1.0
  */
 
 package com.an.view;

@@ -1,10 +1,11 @@
 /**
  * @Title: CompassView.java
- * @Package com.an.view
+ * @Package: com.an.view
  * @Description: 指南针控件
- * @author AnuoF
- * @date 2019.08.02 08:23
- * @version V1.0
+ * @Author: AnuoF
+ * @QQ/WeChat: 188512936
+ * @Date: 2019.08.02 08:23
+ * @Version: V1.0
  */
 
 package com.an.view;
