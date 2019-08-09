@@ -1,51 +1,34 @@
 package com.an.customview;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.an.view.ScaleBar;
 
 import java.util.Random;
 
-public class ActivityScaleBar extends AppCompatActivity {
+public class ActivityScaleBar extends BaseActivity {
 
-    private ScaleBar _scaleBar;
-    private boolean _runing = false;
+    private ScaleBar _scaleBar1;
+    private ScaleBar _scaleBar2;
+    private ScaleBar _scaleBar3;
+    private ScaleBar _scaleBar4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scale_bar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // 启动线程，设置 Value
         initView();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        _runing = false;
-    }
-
     private void initView() {
-        _scaleBar = (ScaleBar) findViewById(R.id.scale_bar);
+        _scaleBar1 = (ScaleBar) findViewById(R.id.scale_bar_1);
+        _scaleBar2 = (ScaleBar) findViewById(R.id.scale_bar_2);
+        _scaleBar3 = (ScaleBar) findViewById(R.id.scale_bar_3);
+        _scaleBar4 = (ScaleBar) findViewById(R.id.scale_bar_4);
+
         _runing = true;
         new Thread() {
             @Override
@@ -55,7 +38,11 @@ public class ActivityScaleBar extends AppCompatActivity {
                 while (_runing) {
                     Random rand = new Random();
                     int value = rand.nextInt(100);
-                    _scaleBar.setValue(value);
+                    _scaleBar1.setValue(value);
+                    _scaleBar2.setValue(value);
+                    _scaleBar3.setValue(value);
+                    _scaleBar4.setValue(value);
+
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {

@@ -38,6 +38,19 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:text="电平流图"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_spectrum_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="频谱图"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -10,8 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ActivitySpectrumView"
+            android:label="频谱图"></activity>
+        <activity
             android:name=".ActivityLevelStreamView"
-            android:label="电平流"></activity>
+            android:label="电平流" />
         <activity
             android:name=".ActivityProgressBar"
             android:label="进度条" />

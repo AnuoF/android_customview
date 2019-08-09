@@ -1,50 +1,23 @@
 package com.an.customview;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.an.view.CompassView;
 
 import java.util.Random;
 
-public class ActivityCompassView extends AppCompatActivity {
+public class ActivityCompassView extends BaseActivity {
 
     private CompassView _compassView1;
     private CompassView _compassView2;
     private CompassView _compassView3;
-
-    private boolean _runing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass_view);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         initView();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        _runing = false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initView() {

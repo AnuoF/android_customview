@@ -34,7 +34,7 @@
             />
 
         <com.an.view.ScaleBar
-            android:id="@+id/scale_bar"
+            android:id="@+id/scale_bar_1"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.an.view.ScaleBar
+                android:id="@+id/scale_bar_2"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
@@ -63,6 +64,7 @@
                 />
 
             <com.an.view.ScaleBar
+                android:id="@+id/scale_bar_3"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -76,6 +78,7 @@
                 />
 
             <com.an.view.ScaleBar
+                android:id="@+id/scale_bar_4"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

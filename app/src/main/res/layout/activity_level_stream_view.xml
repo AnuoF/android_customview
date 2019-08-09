@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ActivityLevelStreamView">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
 
-    <com.an.view.LevelStreamView
-        android:id="@+id/level_stream_view1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="#0A0A0A"
-        android:layout_height="200dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ActivityLevelStreamView">
 
-    <com.an.view.LevelStreamView
-        app:grid_color="#80FCF8F8"
-        app:level_line_color="#06F341"
-        app:unit_color="#FCF9FA"
-        android:layout_marginTop="10dp"
-        android:id="@+id/level_stream_view2"
-        android:layout_width="match_parent"
-        android:background="#0A0A0A"
-        android:layout_height="200dp" />
+        <com.an.view.LevelStreamView
+            android:id="@+id/level_stream_view1"
+            android:layout_width="match_parent"
+            android:background="#0A0A0A"
+            android:layout_height="200dp" />
 
-    <com.an.view.LevelStreamView
-        android:id="@+id/level_stream_view3"
-        android:layout_marginTop="10dp"
-        android:background="#4D4D57"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
-    <!--
+        <com.an.view.LevelStreamView
+            app:grid_color="#80FCF8F8"
+            app:level_line_color="#06F341"
+            app:unit_color="#FCF9FA"
+            android:layout_marginTop="10dp"
+            android:id="@+id/level_stream_view2"
+            android:layout_width="match_parent"
+            android:background="#0A0A0A"
+            android:layout_height="200dp" />
 
-    app:font_size="40"
-            app:font_size="30"
+        <com.an.view.LevelStreamView
+            android:id="@+id/level_stream_view3"
+            android:layout_marginTop="10dp"
+            android:background="#4D4D57"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+        <!--
 
-    -->
+        app:font_size="40"
+                app:font_size="30"
 
+        -->
 
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,48 +1,22 @@
 package com.an.customview;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.an.view.ProgressBar;
 
-public class ActivityProgressBar extends AppCompatActivity {
+public class ActivityProgressBar extends BaseActivity {
 
     private ProgressBar _progressBar1;
     private ProgressBar _progressBar2;
     private ProgressBar _progressBar3;
     private ProgressBar _progressBar4;
 
-    private boolean _runing = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_bar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        _runing = false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initView() {

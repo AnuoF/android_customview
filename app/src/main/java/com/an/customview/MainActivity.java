@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnProgressBar.setOnClickListener(this);
         Button btnLevelStreamView = (Button) findViewById(R.id.btn_level_stream_view);
         btnLevelStreamView.setOnClickListener(this);
+        Button btnSpectrumView = (Button) findViewById(R.id.btn_spectrum_view);
+        btnSpectrumView.setOnClickListener(this);
     }
 
     @Override
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_level_stream_view:
                 startActivity(new Intent(this, ActivityLevelStreamView.class));
+                break;
+            case R.id.btn_spectrum_view:
+                startActivity(new Intent(this, ActivitySpectrumView.class));
                 break;
 
             default:
