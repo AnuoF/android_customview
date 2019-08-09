@@ -16,21 +16,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="ScaleBar"/>
+            android:text="刻度条"/>
 
         <Button
             android:id="@+id/btn_compass_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="CompassView"/>
+            android:text="示向度控件"/>
 
         <Button
             android:id="@+id/btn_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="ProgressBar"/>
+            android:text="进度条"/>
+
+        <Button
+            android:id="@+id/btn_level_stream_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="电平流图"/>
     </LinearLayout>
 
 </LinearLayout>

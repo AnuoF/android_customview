@@ -10,14 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ActivityLevelStreamView"
+            android:label="电平流"></activity>
+        <activity
             android:name=".ActivityProgressBar"
-            android:label="ProgressBar"></activity>
+            android:label="进度条" />
         <activity
             android:name=".ActivityCompassView"
-            android:label="CompassView" />
+            android:label="示向度" />
         <activity
             android:name=".ActivityScaleBar"
-            android:label="ScaleBar" />
+            android:label="刻度条" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

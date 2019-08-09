@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCompassView.setOnClickListener(this);
         Button btnProgressBar = (Button) findViewById(R.id.btn_progress_bar);
         btnProgressBar.setOnClickListener(this);
+        Button btnLevelStreamView = (Button) findViewById(R.id.btn_level_stream_view);
+        btnLevelStreamView.setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_progress_bar:
                 startActivity(new Intent(this, ActivityProgressBar.class));
+                break;
+            case R.id.btn_level_stream_view:
+                startActivity(new Intent(this, ActivityLevelStreamView.class));
                 break;
 
             default:

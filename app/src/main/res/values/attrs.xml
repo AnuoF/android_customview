@@ -53,4 +53,16 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="LevelStreamView">
+        <attr name="grid_count" format="integer"/>
+        <attr name="grid_color" format="color"/>
+        <attr name="unit" format="string"/>
+        <attr name="unit_color" format="color"/>
+        <!--<attr name="font_size" format="integer"/>-->
+        <attr name="scroll_count" format="integer"/>
+        <attr name="level_line_color" format="color"/>
+
+
+    </declare-styleable>
+
 </resources>
