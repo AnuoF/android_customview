@@ -95,16 +95,16 @@ public class ScaleBar extends View {
     private void init(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ScaleBar);
         if (typedArray != null) {
-            _scaleColor = typedArray.getColor(R.styleable.ScaleBar_scale_color, Color.GREEN);
+            _scaleColor = typedArray.getColor(R.styleable.ScaleBar_scale_color_sb, Color.GREEN);
             _paint = new Paint();
 
-            _maxValue = typedArray.getInt(R.styleable.ScaleBar_max_value, 100);
-            _minValue = typedArray.getInt(R.styleable.ScaleBar_min_value, 0);
-            _scaleCount = typedArray.getInt(R.styleable.ScaleBar_scale_count, 10);
-            _title = typedArray.getString(R.styleable.ScaleBar_title);
-            _titleHeight = typedArray.getInt(R.styleable.ScaleBar_title_height, 80);
-            _orientation = typedArray.getInt(R.styleable.ScaleBar_orientation, 0);
-            _barColor = typedArray.getColor(R.styleable.ScaleBar_bar_color, Color.GREEN);
+            _maxValue = typedArray.getInt(R.styleable.ScaleBar_max_value_sb, 100);
+            _minValue = typedArray.getInt(R.styleable.ScaleBar_min_value_sb, 0);
+            _scaleCount = typedArray.getInt(R.styleable.ScaleBar_scale_count_sb, 10);
+            _title = typedArray.getString(R.styleable.ScaleBar_title_sb);
+            _titleHeight = typedArray.getInt(R.styleable.ScaleBar_title_height_sb, 80);
+            _orientation = typedArray.getInt(R.styleable.ScaleBar_orientation_sb, 0);
+            _barColor = typedArray.getColor(R.styleable.ScaleBar_bar_color_sb, Color.GREEN);
         }
     }
 

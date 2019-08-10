@@ -97,17 +97,17 @@ public class LevelStreamView extends View {
     private void initView(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LevelStreamView);
         if (typedArray != null) {
-            _gridCount = typedArray.getInt(R.styleable.LevelStreamView_grid_count, 10);
-            _gridColor = typedArray.getColor(R.styleable.LevelStreamView_grid_color, Color.argb(100, 0, 255, 0));
-            _unitStr = typedArray.getString(R.styleable.LevelStreamView_unit);
+            _gridCount = typedArray.getInt(R.styleable.LevelStreamView_grid_count_lsv, 10);
+            _gridColor = typedArray.getColor(R.styleable.LevelStreamView_grid_color_lsv, Color.argb(100, 0, 255, 0));
+            _unitStr = typedArray.getString(R.styleable.LevelStreamView_unit_lsv);
             if (_unitStr == null || _unitStr.length() == 0) {
                 _unitStr = "电平(dBuV)";
             }
-            _unitColor = typedArray.getColor(R.styleable.LevelStreamView_unit_color, Color.GREEN);
+            _unitColor = typedArray.getColor(R.styleable.LevelStreamView_unit_color_lsv, Color.GREEN);
 //            _fontSize = typedArray.getInt(R.styleable.LevelStreamView_font_size, 20);
             _fontSize = 20;
-            _scrollCount = typedArray.getInt(R.styleable.LevelStreamView_scroll_count, 101);
-            _levelColor = typedArray.getColor(R.styleable.LevelStreamView_level_line_color, Color.WHITE);
+            _scrollCount = typedArray.getInt(R.styleable.LevelStreamView_scroll_count_lsv, 101);
+            _levelColor = typedArray.getColor(R.styleable.LevelStreamView_level_line_color_lsv, Color.WHITE);
         }
 
         _levels = new ArrayList<>();

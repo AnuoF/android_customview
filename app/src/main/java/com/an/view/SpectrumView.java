@@ -20,9 +20,24 @@ import android.view.View;
  */
 public class SpectrumView extends View {
 
+    private String _unitStr;               // 单位
+    private int _unitColor;                // 单位字体颜色
+    private int _gridColor;                // 背景网格颜色
+    private int _gridCount;                // 网格几等分，默认10
+    private int _realTimeLineColor;        // 实时值的颜色
+    private int _maxValueLineColor;        // 最大值的颜色
+    private int _minValueLineColor;        // 最小值的颜色
 
-    private int _width;
-    private int _height;
+    private int _width;                    // 测量的宽度
+    private int _height;                   // 测量的高度
+
+    private double _frequency;             // 中心频率
+    private double _spectrumSpan;          // 频谱带宽
+    private float[] _data;                 // 频谱数据
+
+    private boolean _drawMaxValue;         // 绘制最大值
+    private boolean _drawMinValue;         // 绘制最小值
+
 
     public SpectrumView(Context context, AttributeSet attrs, int defStypeAttr) {
         super(context, attrs, defStypeAttr);
@@ -47,7 +62,30 @@ public class SpectrumView extends View {
      * @param data         频谱数据
      */
     public void setData(double frequency, double spectrunSpan, float[] data) {
+        _frequency = frequency;
+        _spectrumSpan = spectrunSpan;
+        _data = data;
 
+        postInvalidate();
+    }
+
+    /**
+     * 设置是否绘制最大值
+     *
+     * @param visible
+     */
+    public void setMaxValueLineVisible(boolean visible) {
+        this._drawMaxValue = visible;
+        postInvalidate();
+    }
+
+    /**
+     * 设置是否绘制最小值
+     *
+     * @param visible
+     */
+    public void setMinValueLineVisible(boolean visible) {
+        this._drawMinValue = visible;
         postInvalidate();
     }
 

@@ -18,19 +18,19 @@
         <com.an.view.ScaleBar
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            app:scale_color="#9C27B0"
-            app:orientation="vertical"
-            app:bar_color="#80FF5722"
+            app:scale_color_sb="#9C27B0"
+            app:orientation_sb="vertical"
+            app:bar_color_sb="#80FF5722"
             />
 
         <com.an.view.ScaleBar
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            app:scale_color="#673AB7"
-            app:orientation="vertical"
-            app:bar_color="#330B2DEB"
-            app:title="质量"
+            app:scale_color_sb="#673AB7"
+            app:orientation_sb="vertical"
+            app:bar_color_sb="#330B2DEB"
+            app:title_sb="质量"
             />
 
         <com.an.view.ScaleBar
@@ -38,12 +38,12 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            app:scale_color="#0E0D0D"
-            app:orientation="vertical"
-            app:bar_color="#80FFEB3B"
-            app:title="电平"
-            app:max_value="120"
-            app:min_value="-20"
+            app:scale_color_sb="#0E0D0D"
+            app:orientation_sb="vertical"
+            app:bar_color_sb="#80FFEB3B"
+            app:title_sb="电平"
+            app:max_value_sb="120"
+            app:min_value_sb="-20"
             />
 
         <LinearLayout
@@ -56,11 +56,11 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
-                app:scale_color="#09F50D"
-                app:orientation="horizontal"
-                app:bar_color="#8000BCD4"
-                app:title="测试"
-                app:title_height="120"
+                app:scale_color_sb="#09F50D"
+                app:orientation_sb="horizontal"
+                app:bar_color_sb="#8000BCD4"
+                app:title_sb="测试"
+                app:title_height_sb="120"
                 />
 
             <com.an.view.ScaleBar
@@ -70,11 +70,11 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
-                app:scale_color="#0930F5"
-                app:orientation="horizontal"
-                app:bar_color="#80E91E63"
-                app:title_height="50"
-                app:title=" "
+                app:scale_color_sb="#0930F5"
+                app:orientation_sb="horizontal"
+                app:bar_color_sb="#80E91E63"
+                app:title_height_sb="50"
+                app:title_sb=" "
                 />
 
             <com.an.view.ScaleBar
@@ -84,13 +84,13 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
-                app:scale_color="#2196F3"
-                app:orientation="horizontal"
-                app:bar_color="#8009F012"
-                app:title_height="100"
-                app:title="电平"
-                app:max_value="120"
-                app:min_value="-20"
+                app:scale_color_sb="#2196F3"
+                app:orientation_sb="horizontal"
+                app:bar_color_sb="#8009F012"
+                app:title_height_sb="100"
+                app:title_sb="电平"
+                app:max_value_sb="120"
+                app:min_value_sb="-20"
                 />
 
         </LinearLayout>

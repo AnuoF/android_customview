@@ -141,20 +141,20 @@ public class CompassView extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CompassView);
         if (typedArray != null) {
             _markerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            _markerPaint.setColor(typedArray.getColor(R.styleable.CompassView_marker_color, Color.GREEN));
+            _markerPaint.setColor(typedArray.getColor(R.styleable.CompassView_marker_color_cv, Color.GREEN));
 
             _circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            _circlePaint.setColor(typedArray.getColor(R.styleable.CompassView_circle_color, Color.argb(100, 0, 255, 0)));
+            _circlePaint.setColor(typedArray.getColor(R.styleable.CompassView_circle_color_cv, Color.argb(100, 0, 255, 0)));
             _circlePaint.setStrokeWidth(1);
             _circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
             _centerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            _centerCirclePaint.setColor(typedArray.getColor(R.styleable.CompassView_center_circle_color, Color.RED));
+            _centerCirclePaint.setColor(typedArray.getColor(R.styleable.CompassView_center_circle_color_cv, Color.RED));
             _centerCirclePaint.setStrokeWidth(2);
             _centerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
             _textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            _textPaint.setColor(typedArray.getColor(R.styleable.CompassView_text_color, Color.GREEN));
+            _textPaint.setColor(typedArray.getColor(R.styleable.CompassView_text_color_cv, Color.GREEN));
             _textHeight = (int) _textPaint.measureText("yY");
         }
     }

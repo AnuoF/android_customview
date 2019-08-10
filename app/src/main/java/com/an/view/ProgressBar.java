@@ -99,12 +99,12 @@ public class ProgressBar extends View {
     private void initView(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ProgressBar);
         if (typedArray != null) {
-            _borderColor = typedArray.getColor(R.styleable.ProgressBar_border_color, Color.GREEN);
-            _rectColor = typedArray.getColor(R.styleable.ProgressBar_rect_color, Color.argb(100, 0, 0, 255));
-            _borderSize = typedArray.getInt(R.styleable.ProgressBar_border_size, 2);
-            _textColor = typedArray.getColor(R.styleable.ProgressBar_text_color_p, Color.RED);
-            _textSize = typedArray.getInt(R.styleable.ProgressBar_text_size, 40);
-            _orientation = typedArray.getInt(R.styleable.ProgressBar_orientation_p, 0);
+            _borderColor = typedArray.getColor(R.styleable.ProgressBar_border_color_pb, Color.GREEN);
+            _rectColor = typedArray.getColor(R.styleable.ProgressBar_rect_color_pb, Color.argb(100, 0, 0, 255));
+            _borderSize = typedArray.getInt(R.styleable.ProgressBar_border_size_pb, 2);
+            _textColor = typedArray.getColor(R.styleable.ProgressBar_text_color_pb, Color.RED);
+            _textSize = typedArray.getInt(R.styleable.ProgressBar_text_size_pb, 40);
+            _orientation = typedArray.getInt(R.styleable.ProgressBar_orientation_pb, 0);
         }
 
         _paint = new Paint();

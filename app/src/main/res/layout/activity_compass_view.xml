@@ -12,8 +12,8 @@
         android:id="@+id/compass_view1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:circle_color="#802196F3"
-        app:center_circle_color="#03A9F4"
+        app:circle_color_cv="#802196F3"
+        app:center_circle_color_cv="#03A9F4"
         />
 
     <LinearLayout
@@ -25,18 +25,18 @@
             android:id="@+id/compass_view2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:circle_color="#0D9C27B0"
-            app:text_color="#F70606"
-            app:marker_color="#03A9F4"
-            app:center_circle_color="#E91E63"
+            app:circle_color_cv="#0D9C27B0"
+            app:text_color_cv="#F70606"
+            app:marker_color_cv="#03A9F4"
+            app:center_circle_color_cv="#E91E63"
             />
 
         <com.an.view.CompassView
             android:id="@+id/compass_view3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:circle_color="#0D9C27B0"
-            app:center_circle_color="#4DF008"
+            app:circle_color_cv="#0D9C27B0"
+            app:center_circle_color_cv="#4DF008"
             />
     </LinearLayout>
 </LinearLayout>

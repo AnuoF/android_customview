@@ -20,9 +20,9 @@
             android:layout_height="200dp" />
 
         <com.an.view.LevelStreamView
-            app:grid_color="#80FCF8F8"
-            app:level_line_color="#06F341"
-            app:unit_color="#FCF9FA"
+            app:grid_color_lsv="#80FCF8F8"
+            app:level_line_color_lsv="#06F341"
+            app:unit_color_lsv="#FCF9FA"
             android:layout_marginTop="10dp"
             android:id="@+id/level_stream_view2"
             android:layout_width="match_parent"
@@ -35,12 +35,6 @@
             android:background="#4D4D57"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
-        <!--
-
-        app:font_size="40"
-                app:font_size="30"
-
-        -->
 
     </LinearLayout>
 </ScrollView>
