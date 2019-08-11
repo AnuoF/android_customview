@@ -15,6 +15,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,6 +45,7 @@ public class SpectrumView extends View {
     // 内部定义项，画图用
     private int _width;                    // 测量的宽度
     private int _height;                   // 测量的高度
+
     private Paint _paint;                  // 画笔
     private int _scaleLength;              // 小刻度线长度
     private int _maxValue;                 // 纵轴刻度显示的最大值
@@ -53,6 +55,9 @@ public class SpectrumView extends View {
     private double _frequency;             // 中心频率
     private double _spectrumSpan;          // 频谱带宽
     private float[] _data;                 // 频谱数据
+
+    private int _startIndex;               // 提取数据的起始位置
+    private int _endIndex;                 // 提取数据的终止位置
 
     private boolean _drawMaxValue;         // 绘制最大值
     private boolean _drawMinValue;         // 绘制最小值
@@ -76,8 +81,8 @@ public class SpectrumView extends View {
     /**
      * 设置数据
      *
-     * @param frequency    中心频率
-     * @param spectrunSpan 频谱带宽
+     * @param frequency    中心频率 MHz
+     * @param spectrunSpan 频谱带宽 kHz
      * @param data         频谱数据
      */
     public void setData(double frequency, double spectrunSpan, float[] data) {
@@ -207,8 +212,9 @@ public class SpectrumView extends View {
     private void drawAxis(Canvas canvas) {
         _paint.setColor(_gridColor);
         _paint.setTextSize(_scaleFontSize);
+
         int scaleHeight = _height - _margin_top - _margin_bottom;     // 绘制区总高度
-        int scaleWidth = _width - _margin_left - _margin_right;       // 绘制区总宽度
+        int scaleWidth = _width - _margin_left - _margin_right - _scaleLength;       // 绘制区总宽度
 
         float perScaleHeight = scaleHeight / (float) _gridCount;       // 每一格的高度
         float perScaleWidth = scaleWidth / (float) _gridCount;         // 每一格的宽度
@@ -218,7 +224,7 @@ public class SpectrumView extends View {
         _paint.getTextBounds(_maxValue + "", 0, (_maxValue + "").length(), scaleRect);
 
         for (int i = 0; i <= _gridCount; i++) {
-            // 从上往下画，先画刻度值，然后再画横轴很纵轴
+            // 从上往下画，先画刻度值，然后再画横轴和纵轴
             int height = (int) (i * perScaleHeight) + _margin_top;
             int width = _margin_left + _scaleLength + (int) (i * perScaleWidth);
             int startWidth = _margin_left;                         // 起始位置 X
@@ -244,7 +250,7 @@ public class SpectrumView extends View {
                 startWidth += _scaleLength;
 
                 if (i == _gridCount / 2) {
-                    canvas.drawText(_frequency + "", _width - _margin_right - scaleWidth / 2 - scaleRect.width() / 2, _height - _margin_bottom + scaleRect.height(), _paint);
+                    canvas.drawText(_frequency + "", _width - _margin_right - scaleWidth / 2 - scaleRect.width() / 2, _height - _margin_bottom + scaleRect.height() + 5, _paint);
                 }
             }
 
@@ -261,6 +267,31 @@ public class SpectrumView extends View {
      * @param canvas
      */
     private void drawSpectrum(Canvas canvas) {
+        _paint.setColor(_realTimeLineColor);
+        _paint.setStyle(Paint.Style.STROKE);
 
+        _startIndex = 0;
+        _endIndex = _data.length;
+
+        int scaleHeight = _height - _margin_top - _margin_bottom;     // 绘制区总高度
+        int scaleWidth = _width - _margin_left - _margin_right - _scaleLength;       // 绘制区总宽度
+        float perHeight = scaleHeight / (float) Math.abs(_maxValue - _minValue);      // 每一格的高度
+        float perWidth = scaleWidth / (float) (_endIndex - _startIndex);
+
+        Path realTimePath = new Path();
+
+        for (int i = _startIndex; i < _endIndex; i++) {
+            float level = _data[i];
+            int x = (int) ((i - _startIndex) * perWidth) + _margin_left + _scaleLength;
+            int y = (int) (Math.abs(level - _maxValue) * perHeight) + _margin_top;
+
+            if (i == _startIndex) {
+                realTimePath.moveTo(x, y);
+            } else {
+                realTimePath.lineTo(x, y);
+            }
+        }
+
+        canvas.drawPath(realTimePath, _paint);
     }
 }
