@@ -8,12 +8,16 @@
     tools:context=".ActivitySpectrumView">
     
     <com.an.view.SpectrumView
+        android:background="#0A0A0A"
         android:layout_marginTop="10dp"
         android:id="@+id/spectrum_view_1"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <com.an.view.SpectrumView
+        app:unit_sv="电平（dBμV）"
+
+        android:background="#252222"
         android:layout_marginTop="10dp"
         android:id="@+id/spectrum_view_2"
         android:layout_width="match_parent"

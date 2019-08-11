@@ -3,19 +3,19 @@
 
     <declare-styleable name="ScaleBar">
         <!--刻度颜色-->
-        <attr name="scale_color_sb" format="color"/>
+        <attr name="scale_color_sb" format="color" />
         <!--刻度条颜色-->
-        <attr name="bar_color_sb" format="color"/>
+        <attr name="bar_color_sb" format="color" />
         <!--刻度最大值-->
-        <attr name="max_value_sb" format="integer"/>
+        <attr name="max_value_sb" format="integer" />
         <!--最小值-->
-        <attr name="min_value_sb" format="integer"/>
+        <attr name="min_value_sb" format="integer" />
         <!--几等分-->
-        <attr name="scale_count_sb" format="integer"/>
+        <attr name="scale_count_sb" format="integer" />
         <!--标题-->
-        <attr name="title_sb" format="string"/>
+        <attr name="title_sb" format="string" />
         <!--标题预留的空间-->
-        <attr name="title_height_sb" format="integer"/>
+        <attr name="title_height_sb" format="integer" />
         <!--方向：水平、垂直-->
         <attr name="orientation_sb">
             <enum name="horizontal" value="0" />
@@ -23,29 +23,28 @@
         </attr>
     </declare-styleable>
 
-
     <declare-styleable name="CompassView">
         <!--Marker的颜色-->
-        <attr name="marker_color_cv" format="color"/>
+        <attr name="marker_color_cv" format="color" />
         <!--Text的颜色-->
-        <attr name="text_color_cv" format="color"/>
+        <attr name="text_color_cv" format="color" />
         <!--大圆的颜色-->
-        <attr name="circle_color_cv" format="color"/>
+        <attr name="circle_color_cv" format="color" />
         <!--中心园的颜色-->
-        <attr name="center_circle_color_cv" format="color"/>
+        <attr name="center_circle_color_cv" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ProgressBar">
         <!--边框的颜色-->
-        <attr name="border_color_pb" format="color"/>
+        <attr name="border_color_pb" format="color" />
         <!--边框的粗细-->
-        <attr name="border_size_pb" format="integer"/>
+        <attr name="border_size_pb" format="integer" />
         <!--矩形的颜色-->
-        <attr name="rect_color_pb" format="color"/>
+        <attr name="rect_color_pb" format="color" />
         <!--文本的颜色-->
-        <attr name="text_color_pb" format="color"/>
+        <attr name="text_color_pb" format="color" />
         <!--文本大小-->
-        <attr name="text_size_pb" format="integer"/>
+        <attr name="text_size_pb" format="integer" />
         <!--方向：水平、垂直-->
         <attr name="orientation_pb">
             <enum name="horizontal" value="0" />
@@ -54,23 +53,46 @@
     </declare-styleable>
 
     <declare-styleable name="LevelStreamView">
-        <attr name="grid_count_lsv" format="integer"/>
-        <attr name="grid_color_lsv" format="color"/>
-        <attr name="unit_lsv" format="string"/>
-        <attr name="unit_color_lsv" format="color"/>
+        <attr name="grid_count_lsv" format="integer" />
+        <attr name="grid_color_lsv" format="color" />
+        <attr name="unit_lsv" format="string" />
+        <attr name="unit_color_lsv" format="color" />
         <!--<attr name="font_size" format="integer"/>-->
-        <attr name="scroll_count_lsv" format="integer"/>
-        <attr name="level_line_color_lsv" format="color"/>
+        <attr name="scroll_count_lsv" format="integer" />
+        <attr name="level_line_color_lsv" format="color" />
     </declare-styleable>
 
     <declare-styleable name="SpectrumView">
-        <attr name="unit_sv" format="string"/>
-        <attr name="unit_color_sv" format="color"/>
-        <attr name="grid_color_sv" format="color"/>
-        <attr name="grid_count_sv" format="integer"/>
-        <attr name="realtime_line_color_sv" format="color"/>
-        <attr name="max_value_line_color_sv" format="color"/>
-        <attr name="min_value_line_color_sv" format="color"/>
+        <!--单位字体大小-->
+        <attr name="unit_font_size" format="integer" />
+        <!--单位-->
+        <attr name="unit_sv" format="string" />
+        <!--单位颜色-->
+        <attr name="unit_color_sv" format="color" />
+        <!--格子颜色-->
+        <attr name="grid_color_sv" format="color" />
+        <!--格子数，几等分-->
+        <attr name="grid_count_sv" format="integer" />
+        <!--实时值的颜色-->
+        <attr name="realtime_line_color_sv" format="color" />
+        <!--最大值的颜色-->
+        <attr name="max_value_line_color_sv" format="color" />
+        <!--最小值的颜色-->
+        <attr name="min_value_line_color_sv" format="color" />
+        <!--最大值-->
+        <attr name="max_value_sv" format="integer" />
+        <!--最小值-->
+        <attr name="min_value_sv" format="integer" />
+        <!--刻度字体大小-->
+        <attr name="scale_font_size_sv" format="integer" />
+        <!--上边距-->
+        <attr name="margin_top_sv" format="integer" />
+        <!--下边距-->
+        <attr name="margin_bottom_sv" format="integer" />
+        <!--左边距-->
+        <attr name="margin_left_sv" format="integer" />
+        <!--右边距-->
+        <attr name="margin_right_sv" format="integer" />
     </declare-styleable>
 
 </resources>
