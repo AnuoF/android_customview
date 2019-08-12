@@ -42,7 +42,7 @@ public class CompassView extends View {
     // 绘图计算用
     private int _textHeight;
     private int _measureWidth;
-    private int _messureHeight;
+    private int _measureHeight;
     private int _px;
     private int _py;
     private int _radius;
@@ -58,7 +58,7 @@ public class CompassView extends View {
     }
 
     public CompassView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs);
+        super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
@@ -73,10 +73,10 @@ public class CompassView extends View {
         setMeasuredDimension(d, d);
 
         _measureWidth = getMeasuredWidth();
-        _messureHeight = getMeasuredHeight();
+        _measureHeight = getMeasuredHeight();
 
-        _px = _messureHeight / 2;
-        _py = _messureHeight / 2;
+        _px = _measureWidth / 2;
+        _py = _measureHeight / 2;
         _radius = Math.min(_px, _py);   // 取最小值为半径
     }
 

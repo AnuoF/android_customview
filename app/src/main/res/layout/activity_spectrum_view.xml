@@ -9,18 +9,70 @@
     
     <com.an.view.SpectrumView
         android:background="#0A0A0A"
-        android:layout_marginTop="10dp"
         android:id="@+id/spectrum_view_1"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="100dp" />
 
     <com.an.view.SpectrumView
         app:unit_sv="电平（dBμV）"
 
         android:background="#252222"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:id="@+id/spectrum_view_2"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="350dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_zoom_in_sv"
+            android:text="放大"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_zoom_out_sv"
+            android:text="缩小"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_offset_up_sv"
+            android:text="上移"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_offset_down_sv"
+            android:text="下移"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_offset_left_sv"
+            android:text="左移"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_offset_right_sv"
+            android:text="右移"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_clear_sv"
+            android:text="清空"
+            android:layout_width="55dp"
+            android:layout_height="50dp" />
+    </LinearLayout>
 
 </LinearLayout>

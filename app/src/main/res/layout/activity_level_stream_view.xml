@@ -9,19 +9,64 @@
 
     <com.an.view.LevelStreamView
         android:id="@+id/level_stream_view1"
-
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:background="#000000"
+
+        app:level_color_level="#07DFFA"
+        app:unit_color_level="#E91E63"
+        app:grid_color_level="#8008F111"
         app:unit_str_level="电平（dBuV）" />
 
     <com.an.view.LevelStreamView
         android:id="@+id/level_stream_view3"
 
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_marginTop="10dp"
         android:background="#0F0F0F"
         app:unit_str_level="电平（dBuV）" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_zoom_in"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="放大" />
+
+        <Button
+            android:id="@+id/btn_zoom_out"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="缩小" />
+
+        <Button
+            android:id="@+id/btn_offset_up"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="上移" />
+
+        <Button
+            android:id="@+id/btn_offset_down"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="下移" />
+
+        <Button
+            android:id="@+id/btn_auto"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="自动" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:text="清空" />
+    </LinearLayout>
 </LinearLayout>

@@ -24,6 +24,7 @@ import android.view.View;
 import com.an.customview.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -108,6 +109,52 @@ public class LevelStreamView extends View implements View.OnTouchListener {
     public void offsetLevel(int offset) {
         _maxValue += offset;
         _minValue += offset;
+        postInvalidate();
+    }
+
+    /**
+     * 自动调整
+     */
+    public void autoView() {
+        if (_levels.size() == 0)
+            return;
+
+        // 自动调整视图，就是要找到合理的 _maxValue 和 _minValue
+
+        float sum = 0;
+        int num = 0;
+
+        for (int i = 0; i < _levels.size(); i++) {
+            sum += _levels.get(i);
+            num = i;
+        }
+
+        float average = sum / num;
+
+        float maxValue = Collections.max(_levels);
+        float minValue = Collections.min(_levels);
+
+        for (int i = 1; i < 1000; i++) {
+            float max = average + 5 * i;
+            float min = average - 5 * i;
+            if (max > maxValue && min < minValue) {
+                if (Math.abs((max - maxValue) / (float) Math.abs(max - min)) > 0.25) {
+                    num = i;
+                    break;
+                }
+            }
+        }
+
+        _maxValue = (int) (average + 5 * num);
+        _minValue = (int) (average - 5 * num);
+        postInvalidate();
+    }
+
+    /**
+     * 清除数据
+     */
+    public void clear() {
+        _levels.clear();
         postInvalidate();
     }
 
@@ -295,6 +342,17 @@ public class LevelStreamView extends View implements View.OnTouchListener {
         }
 
         canvas.drawPath(path, _paint);
+
+        if (_levels.size() < _levelCount) {
+            // 如果电平点数还未满时，绘制当前电平电
+            int index = _levels.size() - 1;
+            float level = _levels.get(index);
+            int x = _marginLeft + _scaleLineLength + (int) (index * perWidth);
+            int y = _marginTop + (int) ((maxValue - level) * perHeight);
+
+            _paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            canvas.drawCircle(x, y, 5, _paint);
+        }
     }
 
     // 以下为手势拖动和缩放实现
