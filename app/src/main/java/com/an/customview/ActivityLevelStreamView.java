@@ -9,7 +9,7 @@ import java.util.Random;
 public class ActivityLevelStreamView extends BaseActivity {
 
     private LevelStreamView levelStreamView1;
-    private LevelStreamView levelStreamView2;
+//    private LevelStreamViewB levelStreamView2;
     private LevelStreamView levelStreamView3;
 
     @Override
@@ -22,7 +22,7 @@ public class ActivityLevelStreamView extends BaseActivity {
 
     private void initView() {
         levelStreamView1 = (LevelStreamView) findViewById(R.id.level_stream_view1);
-        levelStreamView2 = (LevelStreamView) findViewById(R.id.level_stream_view2);
+//        levelStreamView2 = (LevelStreamViewB) findViewById(R.id.level_stream_view2);
         levelStreamView3 = (LevelStreamView) findViewById(R.id.level_stream_view3);
         _runing = true;
 
@@ -36,7 +36,7 @@ public class ActivityLevelStreamView extends BaseActivity {
                 while (_runing) {
                     float level = random.nextInt(70);
                     levelStreamView1.setLevel(level);
-                    levelStreamView2.setLevel(level);
+//                    levelStreamView2.setLevel(level);
                     levelStreamView3.setLevel(level);
 
                     try {

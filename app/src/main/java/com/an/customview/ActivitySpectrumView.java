@@ -38,7 +38,7 @@ public class ActivitySpectrumView extends BaseActivity {
                 while (_runing) {
                     float[] data = new float[400];
                     for (int i = 0; i < data.length; i++) {
-                        float level = random.nextInt(31) + 30;   // 30 - 60 之间的随机数
+                        float level = random.nextInt(46);   // 0 - 45 之间的随机数
                         data[i] = level;
                     }
 
