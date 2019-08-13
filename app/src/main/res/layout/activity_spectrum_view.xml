@@ -33,14 +33,14 @@
 
         <Button
             android:id="@+id/btn_zoom_in_sv"
-            android:text="Y放大"
-            android:layout_width="61dp"
+            android:text="放大"
+            android:layout_width="55dp"
             android:layout_height="50dp" />
 
         <Button
             android:id="@+id/btn_zoom_out_sv"
-            android:text="Y缩小"
-            android:layout_width="61dp"
+            android:text="缩小"
+            android:layout_width="55dp"
             android:layout_height="50dp" />
 
         <Button
@@ -55,24 +55,6 @@
             android:layout_width="55dp"
             android:layout_height="50dp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/btn_offset_left_sv"
-            android:text="X放大"
-            android:layout_width="61dp"
-            android:layout_height="50dp" />
-
-        <Button
-            android:id="@+id/btn_offset_right_sv"
-            android:text="X缩小"
-            android:layout_width="61dp"
-            android:layout_height="50dp" />
-
         <Button
             android:id="@+id/btn_auto_sv"
             android:text="自动"
@@ -84,6 +66,7 @@
             android:text="清空"
             android:layout_width="55dp"
             android:layout_height="50dp" />
+
     </LinearLayout>
 
 </LinearLayout>

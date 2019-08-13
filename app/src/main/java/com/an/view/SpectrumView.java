@@ -67,8 +67,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private boolean _drawMinValue;         // 绘制最小值
 
     private HandleType _handleType;        // 手势处理类型
-    private float _firstY;                 // 单点触控时的起始点Y，纵轴拖动时用
-    private float _firstX;                 // 单独触控时的起始点X，频谱缩放时用
+    private float _startY;                 // 单点触控时的起始点Y，纵轴拖动时用
+    private float _startX;                 // 单独触控时的起始点X，频谱缩放时用
     private float _endX;                   // 最后点
     private int _offsetY;                  // 单点拖动时的Y轴偏移
     private float _oldDistanceY;           // 多点触控时，最初的距离
@@ -98,9 +98,15 @@ public class SpectrumView extends View implements View.OnTouchListener {
      * @param data         频谱数据
      */
     public void setData(double frequency, double spectrunSpan, float[] data) {
+        if (frequency != _frequency || spectrunSpan != _spectrumSpan) {
+            _startIndex = 0;
+            _endIndex = data.length;
+        }
+
         _frequency = frequency;
         _spectrumSpan = spectrunSpan;
         _data = data;
+
         postInvalidate();
     }
 
@@ -131,6 +137,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
      */
     public void clear() {
         _data = new float[0];
+        _spectrumSpan = 0;
         postInvalidate();
     }
 
@@ -231,6 +238,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
             _spectrumSpan = 20;
             setOnTouchListener(this);
             _handleType = HandleType.NONE;
+            _data = new float[0];
         } else {
             initView();
         }
@@ -259,6 +267,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
         _spectrumSpan = 20;
         setOnTouchListener(this);
         _handleType = HandleType.NONE;
+        _data = new float[0];
     }
 
     /**
@@ -347,14 +356,14 @@ public class SpectrumView extends View implements View.OnTouchListener {
      * @param canvas
      */
     private void drawSpectrum(Canvas canvas) {
-        if (_data.length == 0)
+        if (_data.length == 0 || _startIndex >= _endIndex)
             return;  // 没有数据时不需要绘制
 
         _paint.setColor(_realTimeLineColor);
         _paint.setStyle(Paint.Style.STROKE);
 
-        _startIndex = 0;
-        _endIndex = _data.length;
+//        _startIndex = 0;
+//        _endIndex = _data.length;
 
         int maxValue = _maxValue + _offsetY - _zoomOffsetY;
         int minValue = _minValue + _offsetY + _zoomOffsetY;
@@ -366,7 +375,10 @@ public class SpectrumView extends View implements View.OnTouchListener {
 
         Path realTimePath = new Path();
 
-        for (int i = _startIndex; i < _endIndex; i++) {
+        for (int i = _startIndex; i <= _endIndex; i++) {    // 此处需要加上=，确保最后一个点可以绘制
+            if (i >= _data.length)  // 防止越界
+                continue;
+
             float level = _data[i];
             int x = (int) ((i - _startIndex) * perWidth) + _marginLeft + _scaleLineLength;
             int y = (int) ((maxValue - level) * perHeight) + _marginTop;
@@ -391,11 +403,17 @@ public class SpectrumView extends View implements View.OnTouchListener {
             canvas.drawRect(_marginLeft + _scaleLineLength, _height - _marginBottom + 1, _width - _marginRight, _height + 1, _paint);
         }
 
-        // 绘制中心频率
+        // 计算并绘制中心频率和带宽
+        double startFreq = _frequency - _spectrumSpan / 2 / 1000;
+        double perFreq = _spectrumSpan / _data.length / 1000;
+        int centerIndex = (_startIndex + (_endIndex - _startIndex) / 2);
+        double centerFreq = perFreq * centerIndex + startFreq;
+        double span = perFreq * (_endIndex - _startIndex) / 2 * 1000;
+
         Rect freqRect = new Rect();
-        String freqStr = _frequency + "MHz";
-        String startSpanStr = "-" + _spectrumSpan / 2 + "kHz";
-        String stopSpanStr = "+" + _spectrumSpan / 2 + "kHz";
+        String freqStr = String.format("%.3f", centerFreq) + "MHz";
+        String startSpanStr = "-" + String.format("%.3f", span) + "kHz";
+        String stopSpanStr = "+" + String.format("%.3f", span) + "kHz";
         _paint.setColor(_gridColor);
         _paint.getTextBounds(freqStr, 0, freqStr.length(), freqRect);
         canvas.drawText(freqStr, _width - _marginRight - scaleWidth / 2 - freqRect.width() / 2, _height - _marginBottom + freqRect.height() + 5, _paint);
@@ -407,12 +425,12 @@ public class SpectrumView extends View implements View.OnTouchListener {
         if (_handleType == HandleType.ZONE) {
             _paint.setColor(Color.argb(50, 0, 255, 0));
 
-            if (_endX < _firstX) {
-                canvas.drawLine(_firstX, _marginTop, _endX, _height - _marginBottom, _paint);
-                canvas.drawLine(_endX, _marginTop, _firstX, _height - _marginBottom, _paint);
-                canvas.drawRect(_endX, _marginTop, _firstX, _height - _marginBottom, _paint);
+            if (_endX < _startX) {
+                canvas.drawLine(_startX, _marginTop, _endX, _height - _marginBottom, _paint);
+                canvas.drawLine(_endX, _marginTop, _startX, _height - _marginBottom, _paint);
+                canvas.drawRect(_endX, _marginTop, _startX, _height - _marginBottom, _paint);
             } else {
-                canvas.drawRect(_firstX, _marginTop, _endX, _height - _marginBottom, _paint);
+                canvas.drawRect(_startX, _marginTop, _endX, _height - _marginBottom, _paint);
             }
         }
     }
@@ -422,10 +440,10 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private void actionDown(MotionEvent event) {
         if (Utils.IsPointInRect(0, 0, _marginLeft + _scaleLineLength, _height, (int) event.getX(), (int) event.getY())) {
             _handleType = HandleType.DRAG;    // 纵轴拖动
-            _firstY = event.getY();
+            _startY = event.getY();
         } else if (Utils.IsPointInRect(_marginLeft + _scaleLineLength, _marginTop, _width - _marginRight, _height - _marginBottom, (int) event.getX(), (int) event.getY())) {
             _handleType = HandleType.ZONE;    // 缩放频谱
-            _firstX = event.getX();
+            _startX = _endX = event.getX();
         }
     }
 
@@ -439,7 +457,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private void actionMove(MotionEvent event) {
         if (_handleType == HandleType.DRAG) {
             float currrentY = event.getY();
-            int spanScale = (int) ((currrentY - _firstY) / ((_height - _marginTop - _marginBottom) / Math.abs((_maxValue - _minValue))));
+            int spanScale = (int) ((currrentY - _startY) / ((_height - _marginTop - _marginBottom) / Math.abs((_maxValue - _minValue))));
             if (spanScale != 0) {
                 _offsetY = spanScale;
                 postInvalidate();
@@ -474,10 +492,29 @@ public class SpectrumView extends View implements View.OnTouchListener {
             _minValue += _offsetY;
             _offsetY = 0;
         } else if (_handleType == HandleType.ZONE) {
-            // 这里需要设置索引
-            _firstX = 0;
-            _endX = 0;
+            // 这里需要读取索引
+            if (_startX > _endX) {
+                // 缩小
+                _startIndex = 0;
+                _endIndex = _data.length;
+                postInvalidate();
+            } else if (_startX < _endX) {
+                // 放大。 根据_startX和_endX来确定_startIndex和_endIndex，以及中心频率和带宽
+                if (_data.length == 0 || _endIndex - _startIndex <= 2) {  // 没有数据，或者只有小于2个点时，不在放大
+                    _handleType = HandleType.NONE;
+                    return;
+                }
 
+                float perScaleLength = (_width - _marginLeft - _scaleLineLength - _marginRight) / (float) (_endIndex - _startIndex); //  一格的距离
+                // 在放大的基础上再次放大，巧妙啊，佩服我自己了，哈哈哈
+                int tempEndIndex = _startIndex + (int) ((_endX - _marginLeft - _scaleLineLength) / perScaleLength);
+                int tempStartIndex = _startIndex + (int) ((_startX - _marginLeft - _scaleLineLength) / perScaleLength);
+                if (tempEndIndex > tempStartIndex) {   // 保证至少有2个点（一条直线）
+                    _endIndex = tempEndIndex;
+                    _startIndex = tempStartIndex;
+                    postInvalidate();
+                }
+            }
         }
 
         _handleType = HandleType.NONE;

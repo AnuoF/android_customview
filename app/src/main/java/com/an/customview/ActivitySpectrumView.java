@@ -54,8 +54,8 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
                         data[i] = level;
                     }
 
-                    _spectrumView1.setData(101.7, 20000, data);
-                    _spectrumView2.setData(101.7, 20000, data);
+                    _spectrumView1.setData(101.7, 2000, data);
+                    _spectrumView2.setData(101.7, 2000, data);
 
                     try {
                         Thread.sleep(50);
