@@ -412,7 +412,7 @@ public class LevelStreamView extends View implements View.OnTouchListener {
             float perScaleHeight = (_height - _marginTop - _marginBottom) / (float) Math.abs(_maxValue - _minValue);
 
             int spanScale = (int) ((currentDistanceY - _oldDistanceY) / perScaleHeight);
-            if (spanScale != 0 && ((_maxValue - spanScale) - (_minValue + spanScale)) >= 5) {    // 防止交叉越界，并且在放大到 总刻度长为 2 时，不能缩小
+            if (spanScale != 0 && ((_maxValue - spanScale) - (_minValue + spanScale)) >= _gridCount) {    // 防止交叉越界，并且在放大到 总刻度长为 _gridCount 时，不能缩小
                 _zoomOffsetY = spanScale;
                 postInvalidate();
             }

@@ -8,7 +8,12 @@
     tools:context=".ActivitySpectrumView">
     
     <com.an.view.SpectrumView
-        android:background="#0A0A0A"
+        app:unit_sv="电平（dBμV）"
+        app:unit_color_sv="#E91E63"
+        app:grid_color_sv="#46743B"
+        app:realtime_line_color_sv="#FCF9F9"
+
+        android:background="#0C0C0C"
         android:id="@+id/spectrum_view_1"
         android:layout_width="match_parent"
         android:layout_height="100dp" />
@@ -28,14 +33,14 @@
 
         <Button
             android:id="@+id/btn_zoom_in_sv"
-            android:text="放大"
-            android:layout_width="55dp"
+            android:text="Y放大"
+            android:layout_width="61dp"
             android:layout_height="50dp" />
 
         <Button
             android:id="@+id/btn_zoom_out_sv"
-            android:text="缩小"
-            android:layout_width="55dp"
+            android:text="Y缩小"
+            android:layout_width="61dp"
             android:layout_height="50dp" />
 
         <Button
@@ -58,13 +63,19 @@
 
         <Button
             android:id="@+id/btn_offset_left_sv"
-            android:text="左移"
-            android:layout_width="55dp"
+            android:text="X放大"
+            android:layout_width="61dp"
             android:layout_height="50dp" />
 
         <Button
             android:id="@+id/btn_offset_right_sv"
-            android:text="右移"
+            android:text="X缩小"
+            android:layout_width="61dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btn_auto_sv"
+            android:text="自动"
             android:layout_width="55dp"
             android:layout_height="50dp" />
 

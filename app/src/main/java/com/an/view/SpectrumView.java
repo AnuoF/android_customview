@@ -67,8 +67,12 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private boolean _drawMinValue;         // 绘制最小值
 
     private HandleType _handleType;        // 手势处理类型
-    private float _firstY;                 // 单点触控时的起始点Y
+    private float _firstY;                 // 单点触控时的起始点Y，纵轴拖动时用
+    private float _firstX;                 // 单独触控时的起始点X，频谱缩放时用
+    private float _endX;                   // 最后点
     private int _offsetY;                  // 单点拖动时的Y轴偏移
+    private float _oldDistanceY;           // 多点触控时，最初的距离
+    private int _zoomOffsetY;              // 控制Y轴缩放
 
 
     public SpectrumView(Context context, AttributeSet attrs, int defStypeAttr) {
@@ -98,6 +102,43 @@ public class SpectrumView extends View implements View.OnTouchListener {
         _spectrumSpan = spectrunSpan;
         _data = data;
         postInvalidate();
+    }
+
+    /**
+     * 纵轴平移：上移或下移
+     *
+     * @param offset
+     */
+    public void offsetY(int offset) {
+        _maxValue += offset;
+        _minValue += offset;
+        postInvalidate();
+    }
+
+    /**
+     * 纵轴放大、缩小
+     *
+     * @param zoom
+     */
+    public void zoomY(int zoom) {
+        _maxValue -= zoom;
+        _minValue += zoom;
+        postInvalidate();
+    }
+
+    /**
+     * 清空图形和数据
+     */
+    public void clear() {
+        _data = new float[0];
+        postInvalidate();
+    }
+
+    /**
+     * 视图自动显示
+     */
+    public void autoView() {
+
     }
 
     /**
@@ -135,6 +176,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
             drawUnit(canvas);
             drawAxis(canvas);
             drawSpectrum(canvas);
+            drawSelectRect(canvas);
 
             super.onDraw(canvas);
         }
@@ -255,8 +297,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
         int scaleHeight = _height - _marginTop - _marginBottom;     // 绘制区总高度
         int scaleWidth = _width - _marginLeft - _marginRight - _scaleLineLength;       // 绘制区总宽度
 
-        int maxValue = _maxValue + _offsetY;
-        int minValue = _minValue + _offsetY;
+        int maxValue = _maxValue + _offsetY - _zoomOffsetY;
+        int minValue = _minValue + _offsetY + _zoomOffsetY;
 
         float perScaleHeight = scaleHeight / (float) _gridCount;       // 每一格的高度
         float perScaleWidth = scaleWidth / (float) _gridCount;         // 每一格的宽度
@@ -314,8 +356,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
         _startIndex = 0;
         _endIndex = _data.length;
 
-        int maxValue = _maxValue + _offsetY;
-        int minValue = _minValue + _offsetY;
+        int maxValue = _maxValue + _offsetY - _zoomOffsetY;
+        int minValue = _minValue + _offsetY + _zoomOffsetY;
 
         int scaleHeight = _height - _marginTop - _marginBottom;     // 绘制区总高度
         int scaleWidth = _width - _marginLeft - _marginRight - _scaleLineLength;       // 绘制区总宽度
@@ -361,19 +403,37 @@ public class SpectrumView extends View implements View.OnTouchListener {
         canvas.drawText(stopSpanStr, _width - _marginRight - (float) _paint.measureText(stopSpanStr), _height - _marginBottom + freqRect.height() + 5, _paint);
     }
 
+    private void drawSelectRect(Canvas canvas) {
+        if (_handleType == HandleType.ZONE) {
+            _paint.setColor(Color.argb(50, 0, 255, 0));
+
+            if (_endX < _firstX) {
+                canvas.drawLine(_firstX, _marginTop, _endX, _height - _marginBottom, _paint);
+                canvas.drawLine(_endX, _marginTop, _firstX, _height - _marginBottom, _paint);
+                canvas.drawRect(_endX, _marginTop, _firstX, _height - _marginBottom, _paint);
+            } else {
+                canvas.drawRect(_firstX, _marginTop, _endX, _height - _marginBottom, _paint);
+            }
+        }
+    }
+
     // 以下部分实现平移、放大、缩小等功能
 
     private void actionDown(MotionEvent event) {
         if (Utils.IsPointInRect(0, 0, _marginLeft + _scaleLineLength, _height, (int) event.getX(), (int) event.getY())) {
-            _handleType = HandleType.DRAG;
+            _handleType = HandleType.DRAG;    // 纵轴拖动
             _firstY = event.getY();
-        } else {
-            _handleType = HandleType.NONE;
+        } else if (Utils.IsPointInRect(_marginLeft + _scaleLineLength, _marginTop, _width - _marginRight, _height - _marginBottom, (int) event.getX(), (int) event.getY())) {
+            _handleType = HandleType.ZONE;    // 缩放频谱
+            _firstX = event.getX();
         }
     }
 
     private void actionPointerDown(MotionEvent event) {
-
+        if (event.getPointerCount() == 2) {
+            _handleType = HandleType.ZOOM;
+            _oldDistanceY = Math.abs(event.getY(0) - event.getY(1));
+        }
     }
 
     private void actionMove(MotionEvent event) {
@@ -384,14 +444,25 @@ public class SpectrumView extends View implements View.OnTouchListener {
                 _offsetY = spanScale;
                 postInvalidate();
             }
-        } else if (_handleType == HandleType.ZOOM) {
-
+        } else if (_handleType == HandleType.ZOOM && event.getPointerCount() == 2) {
+            float currentDistanceY = Math.abs(event.getY(0) - event.getY(1));
+            float perScaleHeight = (_height - _marginTop - _marginBottom) / (float) Math.abs(_maxValue - _minValue);
+            int spanScale = (int) ((currentDistanceY - _oldDistanceY) / perScaleHeight);
+            if (spanScale != 0 && ((_maxValue - spanScale) - (_minValue + spanScale) >= _gridCount)) {  // 防止交叉越界，并且在放大到 总刻度长为 _gridCount 时，不能缩小
+                _zoomOffsetY = spanScale;
+                postInvalidate();
+            }
+        } else if (_handleType == HandleType.ZONE) {
+            _endX = event.getX();
+            postInvalidate();
         }
     }
 
     private void actionPointerUp(MotionEvent event) {
         if (_handleType == HandleType.ZOOM) {
-
+            _maxValue -= _zoomOffsetY;
+            _minValue += _zoomOffsetY;
+            _zoomOffsetY = 0;
         }
 
         _handleType = HandleType.NONE;
@@ -402,21 +473,23 @@ public class SpectrumView extends View implements View.OnTouchListener {
             _maxValue += _offsetY;
             _minValue += _offsetY;
             _offsetY = 0;
+        } else if (_handleType == HandleType.ZONE) {
+            // 这里需要设置索引
+            _firstX = 0;
+            _endX = 0;
+
         }
 
         _handleType = HandleType.NONE;
-    }
-
-    private void showInfo(String msg) {
-        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * 手势处理类型枚举
      */
     private enum HandleType {
-        NONE,
-        DRAG,
-        ZOOM
+        NONE,     // 无任何操作
+        DRAG,     // 纵轴拖动平移
+        ZOOM,     // 纵轴放大缩小
+        ZONE      // 频谱放大缩小，显示区间
     }
 }
