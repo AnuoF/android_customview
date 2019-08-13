@@ -472,6 +472,12 @@ public class SpectrumView extends View implements View.OnTouchListener {
             }
         } else if (_handleType == HandleType.ZONE) {
             _endX = event.getX();
+            if (_endX < _marginLeft + _scaleLineLength) {
+                _endX = _marginLeft + _scaleLineLength;
+            } else if (_endX > _width - _marginRight) {
+                _endX = _width - _marginRight;
+            }  // 此处的判断是为了防止Rect越界
+
             postInvalidate();
         }
     }
