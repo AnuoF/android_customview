@@ -17,15 +17,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.an.customview.R;
 
 /**
  * 自定义频谱图控件
  */
-public class SpectrumView extends View {
+public class SpectrumView extends View implements View.OnTouchListener {
 
     // 外部定义项
     private int _unitFontSize;             // 单位字体大小
@@ -36,10 +40,10 @@ public class SpectrumView extends View {
     private int _realTimeLineColor;        // 实时值的颜色
     private int _maxValueLineColor;        // 最大值的颜色
     private int _minValueLineColor;        // 最小值的颜色
-    private int _margin_top;               // 上边距
-    private int _margin_bottom;            // 下边距
-    private int _margin_left;              // 左边距
-    private int _margin_right;             // 右边距
+    private int _marginTop;               // 上边距
+    private int _marginBottom;            // 下边距
+    private int _marginLeft;              // 左边距
+    private int _marginRight;             // 右边距
     private int _scaleFontSize;            // 刻度字体大小
 
     // 内部定义项，画图用
@@ -47,7 +51,7 @@ public class SpectrumView extends View {
     private int _height;                   // 测量的高度
 
     private Paint _paint;                  // 画笔
-    private int _scaleLength;              // 小刻度线长度
+    private int _scaleLineLength;              // 小刻度线长度
     private int _maxValue;                 // 纵轴刻度显示的最大值
     private int _minValue;                 // 纵轴刻度显示的最小值
 
@@ -61,6 +65,10 @@ public class SpectrumView extends View {
 
     private boolean _drawMaxValue;         // 绘制最大值
     private boolean _drawMinValue;         // 绘制最小值
+
+    private HandleType _handleType;        // 手势处理类型
+    private float _firstY;                 // 单点触控时的起始点Y
+    private int _offsetY;                  // 单点拖动时的Y轴偏移
 
 
     public SpectrumView(Context context, AttributeSet attrs, int defStypeAttr) {
@@ -116,8 +124,8 @@ public class SpectrumView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        _width = getMeasuredWidth() - 1;
-        _height = getMeasuredHeight() - 1;
+        _width = getMeasuredWidth();
+        _height = getMeasuredHeight();
     }
 
     @Override
@@ -132,6 +140,30 @@ public class SpectrumView extends View {
         }
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                actionDown(motionEvent);
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                actionPointerDown(motionEvent);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                actionMove(motionEvent);
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                actionPointerUp(motionEvent);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                actionCancelUp(motionEvent);
+                break;
+        }
+
+        return true;
+    }
+
     private void initView(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpectrumView);
         if (typedArray != null) {
@@ -143,18 +175,20 @@ public class SpectrumView extends View {
             _realTimeLineColor = typedArray.getColor(R.styleable.SpectrumView_realtime_line_color_sv, Color.GREEN);
             _maxValueLineColor = typedArray.getColor(R.styleable.SpectrumView_max_value_line_color_sv, Color.RED);
             _minValueLineColor = typedArray.getColor(R.styleable.SpectrumView_min_value_line_color_sv, Color.BLUE);
-            _margin_top = typedArray.getInt(R.styleable.SpectrumView_margin_top_sv, 10);
-            _margin_bottom = typedArray.getInt(R.styleable.SpectrumView_margin_bottom_sv, 50);
-            _margin_left = typedArray.getInt(R.styleable.SpectrumView_margin_left_sv, 50);
-            _margin_right = typedArray.getInt(R.styleable.SpectrumView_margin_right_sv, 10);
+            _marginTop = typedArray.getInt(R.styleable.SpectrumView_margin_top_sv, 10);
+            _marginBottom = typedArray.getInt(R.styleable.SpectrumView_margin_bottom_sv, 30);
+            _marginLeft = typedArray.getInt(R.styleable.SpectrumView_margin_left_sv, 50);
+            _marginRight = typedArray.getInt(R.styleable.SpectrumView_margin_right_sv, 10);
             _scaleFontSize = typedArray.getInt(R.styleable.SpectrumView_scale_font_size_sv, 20);
 
             _paint = new Paint();
             _maxValue = 80;
             _minValue = -20;
-            _scaleLength = 10;
+            _scaleLineLength = 10;
             _frequency = 101.7;
             _spectrumSpan = 20;
+            setOnTouchListener(this);
+            _handleType = HandleType.NONE;
         } else {
             initView();
         }
@@ -169,18 +203,20 @@ public class SpectrumView extends View {
         _realTimeLineColor = Color.GREEN;
         _maxValueLineColor = Color.RED;
         _minValueLineColor = Color.BLUE;
-        _margin_top = 10;
-        _margin_bottom = 50;
-        _margin_left = 10;
-        _margin_right = 10;
+        _marginTop = 10;
+        _marginBottom = 30;
+        _marginLeft = 10;
+        _marginRight = 10;
         _scaleFontSize = 20;
 
         _paint = new Paint();
         _maxValue = 80;
         _minValue = -20;
-        _scaleLength = 10;
+        _scaleLineLength = 10;
         _frequency = 101.7;
         _spectrumSpan = 20;
+        setOnTouchListener(this);
+        _handleType = HandleType.NONE;
     }
 
     /**
@@ -216,21 +252,24 @@ public class SpectrumView extends View {
         _paint.setColor(_gridColor);
         _paint.setTextSize(_scaleFontSize);
 
-        int scaleHeight = _height - _margin_top - _margin_bottom;     // 绘制区总高度
-        int scaleWidth = _width - _margin_left - _margin_right - _scaleLength;       // 绘制区总宽度
+        int scaleHeight = _height - _marginTop - _marginBottom;     // 绘制区总高度
+        int scaleWidth = _width - _marginLeft - _marginRight - _scaleLineLength;       // 绘制区总宽度
+
+        int maxValue = _maxValue + _offsetY;
+        int minValue = _minValue + _offsetY;
 
         float perScaleHeight = scaleHeight / (float) _gridCount;       // 每一格的高度
         float perScaleWidth = scaleWidth / (float) _gridCount;         // 每一格的宽度
-        int perScaleValue = (_maxValue - _minValue) / _gridCount;      // 每一格的刻度值    需要注意是否需要加绝对值符号
+        int perScaleValue = (maxValue - minValue) / _gridCount;      // 每一格的刻度值    需要注意是否需要加绝对值符号
 
         Rect scaleRect = new Rect();
-        _paint.getTextBounds(_maxValue + "", 0, (_maxValue + "").length(), scaleRect);
+        _paint.getTextBounds(maxValue + "", 0, (maxValue + "").length(), scaleRect);
 
         for (int i = 0; i <= _gridCount; i++) {
             // 从上往下画，先画刻度值，然后再画横轴和纵轴
-            int height = (int) (i * perScaleHeight) + _margin_top;
-            int width = _margin_left + _scaleLength + (int) (i * perScaleWidth);
-            int startWidth = _margin_left;                         // 起始位置 X
+            int height = (int) (i * perScaleHeight) + _marginTop;
+            int width = _marginLeft + _scaleLineLength + (int) (i * perScaleWidth);
+            int startWidth = _marginLeft;                         // 起始位置 X
             int textHeight = 0;
 
             if ((i + 1) % 2 != 0) {
@@ -246,21 +285,17 @@ public class SpectrumView extends View {
                 }
 
                 // 画纵轴刻度值
-                int scaleValue = _maxValue - i * perScaleValue;
+                int scaleValue = maxValue - i * perScaleValue;
                 float scaleTextLen = _paint.measureText(scaleValue + "");
                 canvas.drawText(scaleValue + "", startWidth - scaleTextLen, height + textHeight, _paint);
             } else {
-                startWidth += _scaleLength;
-
-                if (i == _gridCount / 2) {
-                    canvas.drawText(_frequency + "", _width - _margin_right - scaleWidth / 2 - scaleRect.width() / 2, _height - _margin_bottom + scaleRect.height() + 5, _paint);
-                }
+                startWidth += _scaleLineLength;
             }
 
             // 画横轴
-            canvas.drawLine(startWidth, height, _width - _margin_right, height, _paint);
+            canvas.drawLine(startWidth, height, _width - _marginRight, height, _paint);
             // 画纵轴
-            canvas.drawLine(width, _margin_top, width, _height - _margin_bottom, _paint);
+            canvas.drawLine(width, _marginTop, width, _height - _marginBottom, _paint);
         }
     }
 
@@ -270,23 +305,29 @@ public class SpectrumView extends View {
      * @param canvas
      */
     private void drawSpectrum(Canvas canvas) {
+        if (_data.length == 0)
+            return;  // 没有数据时不需要绘制
+
         _paint.setColor(_realTimeLineColor);
         _paint.setStyle(Paint.Style.STROKE);
 
         _startIndex = 0;
         _endIndex = _data.length;
 
-        int scaleHeight = _height - _margin_top - _margin_bottom;     // 绘制区总高度
-        int scaleWidth = _width - _margin_left - _margin_right - _scaleLength;       // 绘制区总宽度
-        float perHeight = scaleHeight / (float) Math.abs(_maxValue - _minValue);      // 每一格的高度
+        int maxValue = _maxValue + _offsetY;
+        int minValue = _minValue + _offsetY;
+
+        int scaleHeight = _height - _marginTop - _marginBottom;     // 绘制区总高度
+        int scaleWidth = _width - _marginLeft - _marginRight - _scaleLineLength;       // 绘制区总宽度
+        float perHeight = scaleHeight / (float) Math.abs(maxValue - minValue);      // 每一格的高度
         float perWidth = scaleWidth / (float) (_endIndex - _startIndex);
 
         Path realTimePath = new Path();
 
         for (int i = _startIndex; i < _endIndex; i++) {
             float level = _data[i];
-            int x = (int) ((i - _startIndex) * perWidth) + _margin_left + _scaleLength;
-            int y = (int) (Math.abs(level - _maxValue) * perHeight) + _margin_top;
+            int x = (int) ((i - _startIndex) * perWidth) + _marginLeft + _scaleLineLength;
+            int y = (int) ((maxValue - level) * perHeight) + _marginTop;
 
             if (i == _startIndex) {
                 realTimePath.moveTo(x, y);
@@ -296,5 +337,86 @@ public class SpectrumView extends View {
         }
 
         canvas.drawPath(realTimePath, _paint);
+
+        // 覆盖上边和下边
+        _paint.setStyle(Paint.Style.FILL);
+        Drawable background = getBackground();
+        if (background instanceof ColorDrawable) {
+            ColorDrawable colorDrawable = (ColorDrawable) background;
+            int color = colorDrawable.getColor();
+            _paint.setColor(color);
+            canvas.drawRect(_marginLeft + _scaleLineLength, 0, _width - _marginRight, _marginTop, _paint);
+            canvas.drawRect(_marginLeft + _scaleLineLength, _height - _marginBottom + 1, _width - _marginRight, _height + 1, _paint);
+        }
+
+        // 绘制中心频率
+        Rect freqRect = new Rect();
+        String freqStr = _frequency + "MHz";
+        String startSpanStr = "-" + _spectrumSpan / 2 + "kHz";
+        String stopSpanStr = "+" + _spectrumSpan / 2 + "kHz";
+        _paint.setColor(_gridColor);
+        _paint.getTextBounds(freqStr, 0, freqStr.length(), freqRect);
+        canvas.drawText(freqStr, _width - _marginRight - scaleWidth / 2 - freqRect.width() / 2, _height - _marginBottom + freqRect.height() + 5, _paint);
+        canvas.drawText(startSpanStr, _marginLeft + _scaleLineLength, _height - _marginBottom + freqRect.height() + 5, _paint);
+        canvas.drawText(stopSpanStr, _width - _marginRight - (float) _paint.measureText(stopSpanStr), _height - _marginBottom + freqRect.height() + 5, _paint);
+    }
+
+    // 以下部分实现平移、放大、缩小等功能
+
+    private void actionDown(MotionEvent event) {
+        if (Utils.IsPointInRect(0, 0, _marginLeft + _scaleLineLength, _height, (int) event.getX(), (int) event.getY())) {
+            _handleType = HandleType.DRAG;
+            _firstY = event.getY();
+        } else {
+            _handleType = HandleType.NONE;
+        }
+    }
+
+    private void actionPointerDown(MotionEvent event) {
+
+    }
+
+    private void actionMove(MotionEvent event) {
+        if (_handleType == HandleType.DRAG) {
+            float currrentY = event.getY();
+            int spanScale = (int) ((currrentY - _firstY) / ((_height - _marginTop - _marginBottom) / Math.abs((_maxValue - _minValue))));
+            if (spanScale != 0) {
+                _offsetY = spanScale;
+                postInvalidate();
+            }
+        } else if (_handleType == HandleType.ZOOM) {
+
+        }
+    }
+
+    private void actionPointerUp(MotionEvent event) {
+        if (_handleType == HandleType.ZOOM) {
+
+        }
+
+        _handleType = HandleType.NONE;
+    }
+
+    private void actionCancelUp(MotionEvent event) {
+        if (_handleType == HandleType.DRAG) {
+            _maxValue += _offsetY;
+            _minValue += _offsetY;
+            _offsetY = 0;
+        }
+
+        _handleType = HandleType.NONE;
+    }
+
+    private void showInfo(String msg) {
+        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 手势处理类型枚举
+     */
+    private enum HandleType {
+        NONE,
+        DRAG,
+        ZOOM
     }
 }

@@ -17,6 +17,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -357,6 +359,17 @@ public class LevelStreamView extends View implements View.OnTouchListener {
 
             _paint.setStyle(Paint.Style.FILL_AND_STROKE);
             canvas.drawCircle(x, y, 5, _paint);
+        }
+
+        // 覆盖上边和下边，使得绘制的图形看上去只在网格中绘制
+        _paint.setStyle(Paint.Style.FILL);
+        Drawable background = getBackground();
+        if (background instanceof ColorDrawable) {
+            ColorDrawable colorDrawable = (ColorDrawable) background;
+            int color = colorDrawable.getColor();
+            _paint.setColor(color);
+            canvas.drawRect(_marginLeft + _scaleLineLength, 0, _width - _marginRight, _marginTop, _paint);
+            canvas.drawRect(_marginLeft + _scaleLineLength, _height - _marginBottom + 1, _width - _marginRight, _height, _paint);
         }
     }
 
