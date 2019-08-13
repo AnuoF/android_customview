@@ -1,0 +1,9 @@
+打包步骤
+
+1) build.gradle     library
+
+2) MainActivity ActivityLevelStreamView
+
+3) AndroidManifest.xml   注释 Application
+
+4) terminal   gradlew assembleRelease

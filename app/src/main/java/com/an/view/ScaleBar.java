@@ -29,8 +29,6 @@ import java.util.Date;
  */
 public class ScaleBar extends View {
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
-
     private Paint _paint;       // 画笔
     private int _maxValue;      // 刻度显示的最大值
     private int _minValue;      // 刻度显示的最小值
@@ -42,7 +40,7 @@ public class ScaleBar extends View {
     private int _scaleColor;    // 刻度线条颜色
 
     private int _scaleLineLength;  // 刻度线的长，这个自适应
-    private int _value = 50;         // 刻度值
+    private int _value;         // 刻度值
     private int _width;         // View 宽度值
     private int _height;        // View 高度值
 
@@ -105,6 +103,9 @@ public class ScaleBar extends View {
             _titleHeight = typedArray.getInt(R.styleable.ScaleBar_title_height_sb, 80);
             _orientation = typedArray.getInt(R.styleable.ScaleBar_orientation_sb, 0);
             _barColor = typedArray.getColor(R.styleable.ScaleBar_bar_color_sb, Color.GREEN);
+            _value = _minValue;
+        } else {
+            init();
         }
     }
 
@@ -119,6 +120,7 @@ public class ScaleBar extends View {
         _scaleCount = 10;
         _title = "";
         _orientation = 0;
+        _value = _minValue;
     }
 
     @Override
@@ -138,7 +140,7 @@ public class ScaleBar extends View {
     protected void onDraw(Canvas canvas) {
         _paint.setColor(_scaleColor);
         drawBorker(canvas);
-        boolean valid = checkExpired();
+        boolean valid = Utils.checkValid();
         if (valid) {
             if (_orientation == 0) {
                 _paint.setTextSize(_height / 3);
@@ -250,26 +252,4 @@ public class ScaleBar extends View {
         }
     }
 
-    /**
-     * 检查是否过期
-     *
-     * @return
-     */
-    private boolean checkExpired() {
-        long currentTime = System.currentTimeMillis();
-        String timeNow = sdf.format(currentTime);
-        boolean outofdate = false;
-        try {
-            Date lisenseDate = sdf.parse(" 2020-04-1 00:00:00 ");  // April Fools' Day
-            Date currDate = sdf.parse(timeNow);
-            if (currDate.compareTo(lisenseDate) > 0) {
-                outofdate = true;
-            }
-
-            return !outofdate;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return true;
-        }
-    }
 }

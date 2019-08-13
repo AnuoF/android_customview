@@ -20,6 +20,10 @@ import android.view.View;
 
 import com.an.customview.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 自定义罗盘、指南针控件，用于显示方位角
  */
@@ -82,11 +86,14 @@ public class CompassView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawCircle(canvas);
-        drawScaleText(canvas);
-        drawCenterCircleAndDirectionLine(canvas);
+        boolean valid = Utils.checkValid();
+        if (valid) {
+            drawCircle(canvas);
+            drawScaleText(canvas);
+            drawCenterCircleAndDirectionLine(canvas);
 
-        super.onDraw(canvas);
+            super.onDraw(canvas);
+        }
     }
 
     /**

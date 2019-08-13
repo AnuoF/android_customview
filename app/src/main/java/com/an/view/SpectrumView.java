@@ -122,11 +122,14 @@ public class SpectrumView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawUnit(canvas);
-        drawAxis(canvas);
-        drawSpectrum(canvas);
+        boolean valid = Utils.checkValid();
+        if (valid) {
+            drawUnit(canvas);
+            drawAxis(canvas);
+            drawSpectrum(canvas);
 
-        super.onDraw(canvas);
+            super.onDraw(canvas);
+        }
     }
 
     private void initView(Context context, AttributeSet attrs) {

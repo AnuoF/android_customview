@@ -23,8 +23,10 @@ import android.view.View;
 
 import com.an.customview.R;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -168,11 +170,14 @@ public class LevelStreamView extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawUnit(canvas);
-        drawAxis(canvas);
-        drawLevel(canvas);
+        boolean valid = Utils.checkValid();
+        if (valid) {
+            drawUnit(canvas);
+            drawAxis(canvas);
+            drawLevel(canvas);
 
-        super.onDraw(canvas);
+            super.onDraw(canvas);
+        }
     }
 
     @Override
