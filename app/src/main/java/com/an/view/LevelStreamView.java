@@ -143,7 +143,7 @@ public class LevelStreamView extends View implements View.OnTouchListener {
             float max = average + 5 * i;
             float min = average - 5 * i;
             if (max > maxValue && min < minValue) {
-                if (Math.abs((max - maxValue) / (float) Math.abs(max - min)) > 0.25) {
+                if (Math.abs((max - maxValue) / (float) Math.abs(max - min)) >= 0.25) {
                     num = i;       // 最大值与顶点的距离 >= 1/4
                     break;
                 }
