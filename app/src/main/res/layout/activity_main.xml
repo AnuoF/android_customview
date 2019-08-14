@@ -51,6 +51,13 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:text="频谱图"/>
+
+        <Button
+            android:id="@+id/btn_waterfull_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="瀑布图"/>
     </LinearLayout>
 
 </LinearLayout>

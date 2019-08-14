@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ActivityWaterfullView"></activity>
         <activity
             android:name=".ActivitySpectrumView"
-            android:label="频谱图"></activity>
+            android:label="频谱图" />
         <activity
             android:name=".ActivityLevelStreamView"
             android:label="电平流" />

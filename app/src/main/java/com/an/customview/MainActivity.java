@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLevelStreamView.setOnClickListener(this);
         Button btnSpectrumView = (Button) findViewById(R.id.btn_spectrum_view);
         btnSpectrumView.setOnClickListener(this);
+        Button btnWaterfullView = (Button) findViewById(R.id.btn_waterfull_view);
+        btnWaterfullView.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_spectrum_view:
                 startActivity(new Intent(this, ActivitySpectrumView.class));
+                break;
+            case R.id.btn_waterfull_view:
+                startActivity(new Intent(this, ActivityWaterfullView.class));
                 break;
 
             default:
