@@ -112,21 +112,21 @@ public class WaterfullView extends View {
 
         //    4A0000,750000,9F0000,C60000,FF0000,FE6D16,FFFF00,1E90FF,000091,000050,000030,000020,000000
         int[] colors = new int[13];
-        //colors[0] = Color.parseColor("4A0000");
-        colors[1] = Color.parseColor("750000");
-        colors[2] = Color.parseColor("9F0000");
-        colors[3] = Color.parseColor("C60000");
-        colors[4] = Color.parseColor("FF0000");
-        colors[5] = Color.parseColor("FE6D16");
-        colors[6] = Color.parseColor("FFFF00");
-        colors[7] = Color.parseColor("1E90FF");
-        colors[8] = Color.parseColor("000091");
-        colors[9] = Color.parseColor("000050");
-        colors[10] = Color.parseColor("000030");
-        colors[11] = Color.parseColor("000020");
-        colors[12] = Color.parseColor("000000");
+        colors[0] = Color.rgb(74, 0, 0);
+        colors[1] = Color.rgb(117, 0, 0);
+        colors[2] = Color.rgb(159, 0, 0);
+        colors[3] = Color.rgb(198, 0, 0);
+        colors[4] = Color.rgb(255, 0, 0);
+        colors[5] = Color.rgb(254, 109, 22);
+        colors[6] = Color.rgb(255, 255, 0);
+        colors[7] = Color.rgb(30, 144, 255);
+        colors[8] = Color.rgb(0, 0, 145);
+        colors[9] = Color.rgb(0, 0, 80);
+        colors[10] = Color.rgb(0, 0, 48);
+        colors[11] = Color.rgb(0, 0, 32);
+        colors[12] = Color.rgb(0, 0, 0);
 
-        LinearGradient linearGradient = new LinearGradient(0, 0, _marginLeft, _height, new int[]{}, null, Shader.TileMode.CLAMP);
+        LinearGradient linearGradient = new LinearGradient(0, 0, _marginLeft, _height, colors, null, Shader.TileMode.CLAMP);
         _paint.setShader(linearGradient);
         canvas.drawRect(0, 0, _marginLeft, _height, _paint);
 

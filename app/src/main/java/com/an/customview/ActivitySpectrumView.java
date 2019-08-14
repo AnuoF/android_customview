@@ -48,11 +48,13 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
                 super.run();
 
                 while (_runing) {
-                    float[] data = new float[400];
-                    for (int i = 0; i < data.length; i++) {
-                        float level = random.nextInt(46);   // 0 - 45 之间的随机数
-                        data[i] = level;
-                    }
+//                    float[] data = new float[400];
+//                    for (int i = 0; i < data.length; i++) {
+//                        float level = random.nextInt(46);   // 0 - 45 之间的随机数
+//                        data[i] = level;
+//                    }
+
+                    float[] data = getSpectremData();
 
                     _spectrumView1.setData(101.7, 2000, data);
                     _spectrumView2.setData(101.7, 2000, data);
@@ -96,5 +98,20 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
                 break;
 
         }
+    }
+
+    private float[] getSpectremData() {
+        float[] data = new float[801];
+        Random rand = new Random();
+
+        for (int i = 0; i < 801; i++) {
+            data[i] = (rand.nextInt(50 - (-150) + 1) + (-150)) / 10;
+        }
+
+        data[399] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+        data[400] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
+        data[401] =  27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+
+        return data;
     }
 }

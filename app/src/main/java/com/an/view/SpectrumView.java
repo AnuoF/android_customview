@@ -19,17 +19,11 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.RequiresApi;
-
 import com.an.customview.R;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * 自定义频谱图控件
@@ -526,7 +520,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
             float currentDistanceY = Math.abs(event.getY(0) - event.getY(1));
             float perScaleHeight = (_height - _marginTop - _marginBottom) / (float) Math.abs(_maxValue - _minValue);
             int spanScale = (int) ((currentDistanceY - _oldDistanceY) / perScaleHeight);
-            if (spanScale != 0 && ((_maxValue - spanScale) - (_minValue + spanScale) >= _gridCount)) {  // 防止交叉越界，并且在放大到 总刻度长为 _gridCount 时，不能缩小
+            if (spanScale != 0 && ((_maxValue - spanScale) - (_minValue + spanScale) >= _gridCount)) {  // 防止交叉越界，并且在放大到 总刻度长为 _gridCount 时，不能再放大
                 _zoomOffsetY = spanScale;
                 postInvalidate();
             }
