@@ -116,6 +116,8 @@
         <attr name="margin_left_sv" format="integer" />
         <!--右边距-->
         <attr name="margin_right_sv" format="integer" />
+        <!--选择区域的颜色-->
+        <attr name="select_rect_color_sv" format="color"/>
     </declare-styleable>
 
 </resources>

@@ -137,21 +137,24 @@ public class LevelStreamView extends View implements View.OnTouchListener {
 
         float maxValue = Collections.max(_levels);
         float minValue = Collections.min(_levels);
+        num = 0;
 
         for (int i = 1; i < 1000; i++) {
             float max = average + 5 * i;
             float min = average - 5 * i;
             if (max > maxValue && min < minValue) {
                 if (Math.abs((max - maxValue) / (float) Math.abs(max - min)) > 0.25) {
-                    num = i;
+                    num = i;       // 最大值与顶点的距离 >= 1/4
                     break;
                 }
             }
         }
 
-        _maxValue = (int) (average + 5 * num);
-        _minValue = (int) (average - 5 * num);
-        postInvalidate();
+        if (num != 0) {
+            _maxValue = (int) (average + 5 * num);
+            _minValue = (int) (average - 5 * num);
+            postInvalidate();
+        }
     }
 
     /**

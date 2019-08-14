@@ -19,12 +19,17 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.an.customview.R;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 自定义频谱图控件
@@ -40,18 +45,19 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private int _realTimeLineColor;        // 实时值的颜色
     private int _maxValueLineColor;        // 最大值的颜色
     private int _minValueLineColor;        // 最小值的颜色
-    private int _marginTop;               // 上边距
-    private int _marginBottom;            // 下边距
-    private int _marginLeft;              // 左边距
-    private int _marginRight;             // 右边距
+    private int _marginTop;                // 上边距
+    private int _marginBottom;             // 下边距
+    private int _marginLeft;               // 左边距
+    private int _marginRight;              // 右边距
     private int _scaleFontSize;            // 刻度字体大小
+    private int _selectRectColor;          // 选择区域的颜色
 
     // 内部定义项，画图用
     private int _width;                    // 测量的宽度
     private int _height;                   // 测量的高度
 
     private Paint _paint;                  // 画笔
-    private int _scaleLineLength;              // 小刻度线长度
+    private int _scaleLineLength;          // 小刻度线长度
     private int _maxValue;                 // 纵轴刻度显示的最大值
     private int _minValue;                 // 纵轴刻度显示的最小值
 
@@ -63,8 +69,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private int _startIndex;               // 提取数据的起始位置
     private int _endIndex;                 // 提取数据的终止位置
 
-    private boolean _drawMaxValue;         // 绘制最大值
-    private boolean _drawMinValue;         // 绘制最小值
+    private boolean _drawMaxValue;         // 绘制最大值（暂未实现）
+    private boolean _drawMinValue;         // 绘制最小值（暂未实现）
 
     private HandleType _handleType;        // 手势处理类型
     private float _startY;                 // 单点触控时的起始点Y，纵轴拖动时用
@@ -73,7 +79,6 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private int _offsetY;                  // 单点拖动时的Y轴偏移
     private float _oldDistanceY;           // 多点触控时，最初的距离
     private int _zoomOffsetY;              // 控制Y轴缩放
-
 
     public SpectrumView(Context context, AttributeSet attrs, int defStypeAttr) {
         super(context, attrs, defStypeAttr);
@@ -95,7 +100,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
      *
      * @param frequency    中心频率 MHz
      * @param spectrunSpan 频谱带宽 kHz
-     * @param data         频谱数据
+     * @param data         频谱数据（点数与频谱带宽和分辨率有关）
      */
     public void setData(double frequency, double spectrunSpan, float[] data) {
         if (frequency != _frequency || spectrunSpan != _spectrumSpan) {
@@ -145,7 +150,30 @@ public class SpectrumView extends View implements View.OnTouchListener {
      * 视图自动显示
      */
     public void autoView() {
+        if (_data == null || _data.length == 0)
+            return;  // 没有数据时不响应
 
+        // 获取最大值和最小值，来确定 _maxValue 和 _minValue
+        MinMaxValue minMax = getMinMax(_data);
+        float average = (minMax.getMax() + minMax.getMin()) / 2;
+        int num = 0;
+
+        for (int i = 1; i < 1000; i++) {
+            float max = average + 5 * i;
+            float min = average - 5 * i;
+            if (max > minMax.getMax() && min < minMax.getMin()) {
+                if (Math.abs((max - minMax.getMax()) / (float) Math.abs(max - min)) >= 0.25) {
+                    num = i;    // 最大值与顶点的距离 >= 1/4
+                    break;
+                }
+            }
+        }
+
+        if (num != 0) {
+            _maxValue = (int) (average + 5 * num);
+            _minValue = (int) (average - 5 * num);
+            postInvalidate();
+        }
     }
 
     /**
@@ -229,6 +257,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
             _marginLeft = typedArray.getInt(R.styleable.SpectrumView_margin_left_sv, 50);
             _marginRight = typedArray.getInt(R.styleable.SpectrumView_margin_right_sv, 10);
             _scaleFontSize = typedArray.getInt(R.styleable.SpectrumView_scale_font_size_sv, 20);
+            _selectRectColor = typedArray.getColor(R.styleable.SpectrumView_select_rect_color_sv, Color.argb(100, 255, 0, 0));
 
             _paint = new Paint();
             _maxValue = 80;
@@ -258,6 +287,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
         _marginLeft = 10;
         _marginRight = 10;
         _scaleFontSize = 20;
+        _selectRectColor = Color.argb(100, 255, 0, 0);
 
         _paint = new Paint();
         _maxValue = 80;
@@ -284,6 +314,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
 
         _paint.setColor(_unitColor);
         _paint.setTextSize(_unitFontSize);
+        _paint.setStyle(Paint.Style.FILL);
+        _paint.setStrokeWidth(1);
         Rect unitRect = new Rect();
         _paint.getTextBounds(_unitStr, 0, _unitStr.length(), unitRect);
 
@@ -311,7 +343,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
 
         float perScaleHeight = scaleHeight / (float) _gridCount;       // 每一格的高度
         float perScaleWidth = scaleWidth / (float) _gridCount;         // 每一格的宽度
-        int perScaleValue = (maxValue - minValue) / _gridCount;      // 每一格的刻度值    需要注意是否需要加绝对值符号
+        int perScaleValue = (maxValue - minValue) / _gridCount;        // 每一格的刻度值    需要注意是否需要加绝对值符号
 
         Rect scaleRect = new Rect();
         _paint.getTextBounds(maxValue + "", 0, (maxValue + "").length(), scaleRect);
@@ -320,16 +352,13 @@ public class SpectrumView extends View implements View.OnTouchListener {
             // 从上往下画，先画刻度值，然后再画横轴和纵轴
             int height = (int) (i * perScaleHeight) + _marginTop;
             int width = _marginLeft + _scaleLineLength + (int) (i * perScaleWidth);
-            int startWidth = _marginLeft;                         // 起始位置 X
+            int startWidth = _marginLeft;         // 起始位置 X
             int textHeight = 0;
 
             if ((i + 1) % 2 != 0) {
                 if (i == 0) {
                     textHeight += scaleRect.height();
-
-                    // 画横轴的起始文本
                 } else if (i == _gridCount) {
-                    // 画横轴的终止文本
 
                 } else {
                     textHeight += scaleRect.height() / 2;
@@ -362,9 +391,6 @@ public class SpectrumView extends View implements View.OnTouchListener {
         _paint.setColor(_realTimeLineColor);
         _paint.setStyle(Paint.Style.STROKE);
 
-//        _startIndex = 0;
-//        _endIndex = _data.length;
-
         int maxValue = _maxValue + _offsetY - _zoomOffsetY;
         int minValue = _minValue + _offsetY + _zoomOffsetY;
 
@@ -392,7 +418,7 @@ public class SpectrumView extends View implements View.OnTouchListener {
 
         canvas.drawPath(realTimePath, _paint);
 
-        // 覆盖上边和下边
+        // 覆盖上边和下边，使频谱看上去是在指定区域进行绘制的
         _paint.setStyle(Paint.Style.FILL);
         Drawable background = getBackground();
         if (background instanceof ColorDrawable) {
@@ -423,14 +449,48 @@ public class SpectrumView extends View implements View.OnTouchListener {
 
     private void drawSelectRect(Canvas canvas) {
         if (_handleType == HandleType.ZONE) {
-            _paint.setColor(Color.argb(50, 0, 255, 0));
+            if (_endX == _startX) {
+                // 如果相等，则绘制当前点的频率和垂直线条
+                _paint.setColor(Color.RED);
+                _paint.setStyle(Paint.Style.STROKE);
+                _paint.setStrokeWidth(2);
 
-            if (_endX < _startX) {
+                canvas.drawLine(_startX, _marginTop + 1, _startX, _height - _marginBottom, _paint);
+
+                float perScaleLength = (_width - _marginLeft - _scaleLineLength - _marginRight) / (float) (_endIndex - _startIndex); //  一格的距离
+                int tempStartIndex = _startIndex + (int) ((_startX - _marginLeft - _scaleLineLength) / perScaleLength);
+                double perFreq = _spectrumSpan / _data.length / 1000;
+                String currentFreqStr = String.format("%.3f", tempStartIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + "MHz";     // 当前点的频率
+                _paint.setStyle(Paint.Style.FILL);
+                Rect rect = new Rect();
+                _paint.getTextBounds(currentFreqStr, 0, currentFreqStr.length(), rect);
+                canvas.drawText(currentFreqStr, _startX, _marginTop + rect.height() + 2, _paint);
+            } else if (_endX < _startX) {
+                // 缩小
+                _paint.setColor(_selectRectColor);
+                _paint.setStrokeWidth(4);
                 canvas.drawLine(_startX, _marginTop, _endX, _height - _marginBottom, _paint);
                 canvas.drawLine(_endX, _marginTop, _startX, _height - _marginBottom, _paint);
-                canvas.drawRect(_endX, _marginTop, _startX, _height - _marginBottom, _paint);
+                canvas.drawRect(_endX, _marginTop + 1, _startX, _height - _marginBottom, _paint);
             } else {
-                canvas.drawRect(_startX, _marginTop, _endX, _height - _marginBottom, _paint);
+                // 放大，绘制矩形和计算起始、终止频率以及实时带宽
+                _paint.setColor(_selectRectColor);
+                canvas.drawRect(_startX, _marginTop + 1, _endX, _height - _marginBottom, _paint);
+
+                float perScaleLength = (_width - _marginLeft - _scaleLineLength - _marginRight) / (float) (_endIndex - _startIndex); //  一格的距离
+                int tempEndIndex = _startIndex + (int) ((_endX - _marginLeft - _scaleLineLength) / perScaleLength);
+                int tempStartIndex = _startIndex + (int) ((_startX - _marginLeft - _scaleLineLength) / perScaleLength);
+                double perFreq = _spectrumSpan / _data.length / 1000;
+                String startFreqStr = String.format("%.3f", tempStartIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + " MHz";
+                String endFreqStr = String.format("%.3f", tempEndIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + " MHz";
+                String spanStr = String.format("%.3f", perFreq * (tempEndIndex - tempStartIndex) * 1000) + " kHz";
+
+                Rect rect = new Rect();
+                _paint.getTextBounds(spanStr, 0, spanStr.length(), rect);
+                _paint.setColor(_realTimeLineColor);
+                canvas.drawText(startFreqStr, _startX, _marginTop + rect.height() + 5, _paint);
+                canvas.drawText(endFreqStr, _startX, _marginTop + rect.height() * 2 + 8, _paint);
+                canvas.drawText(spanStr, _startX, _marginTop + rect.height() * 3 + 11, _paint);
             }
         }
     }
@@ -505,8 +565,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
                 _endIndex = _data.length;
                 postInvalidate();
             } else if (_startX < _endX) {
-                // 放大。 根据_startX和_endX来确定_startIndex和_endIndex，以及中心频率和带宽
-                if (_data.length == 0 || _endIndex - _startIndex <= 2) {  // 没有数据，或者只有小于2个点时，不在放大
+                // 放大。 根据 _startX 和 _endX 来确定 _startIndex 和 _endIndex，以及中心频率和带宽
+                if (_data.length == 0 || _endIndex - _startIndex <= 2) {  // 没有数据，或者只要小于2个点时，不再放大
                     _handleType = HandleType.NONE;
                     return;
                 }
@@ -534,5 +594,56 @@ public class SpectrumView extends View implements View.OnTouchListener {
         DRAG,     // 纵轴拖动平移
         ZOOM,     // 纵轴放大缩小
         ZONE      // 频谱放大缩小，显示区间
+    }
+
+    /**
+     * 获取数组最大值和最小值
+     *
+     * @param arr
+     * @return
+     */
+    private MinMaxValue getMinMax(float[] arr) {
+        float max = Integer.MIN_VALUE;
+        float min = Integer.MAX_VALUE;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+            if (arr[i] < min) {
+                min = arr[i];
+            }
+        }
+
+        MinMaxValue minMax = new MinMaxValue();
+        minMax.setMax(max);
+        minMax.setMin(min);
+
+        return minMax;
+    }
+
+    private class MinMaxValue {
+        private float _max;
+        private float _min;
+
+        // 构造函数
+        public MinMaxValue() {
+        }
+
+        public void setMax(float max) {
+            _max = max;
+        }
+
+        public float getMax() {
+            return _max;
+        }
+
+        public void setMin(float min) {
+            _min = min;
+        }
+
+        public float getMin() {
+            return _min;
+        }
     }
 }
