@@ -35,7 +35,7 @@ public class ActivityWaterfullView extends BaseActivity {
                     _waterfallView.setData(101.7, 2000, data);
 
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
