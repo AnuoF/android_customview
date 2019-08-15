@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ActivityWaterfullView">
 
-    <com.an.view.WaterfullView
+    <com.an.view.WaterfallView
         android:id="@+id/waterfull_view_1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

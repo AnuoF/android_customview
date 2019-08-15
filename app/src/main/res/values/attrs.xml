@@ -120,11 +120,14 @@
         <attr name="select_rect_color_sv" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="WaterfullView">
+    <declare-styleable name="WaterfallView">
         <attr name="marginTop_Wv" format="integer"/>
         <attr name="marginBottom_Wv" format="integer"/>
         <attr name="marginLeft_Wv" format="integer"/>
         <attr name="marginRight_Wv" format="integer"/>
+        <attr name="rainRow_Wv" format="integer"/>
+        <attr name="zAxisMax_Wv" format="integer"/>
+        <attr name="zAxizMin_Wv" format="integer"/>
 
     </declare-styleable>
 

@@ -424,21 +424,28 @@ public class SpectrumView extends View implements View.OnTouchListener {
         }
 
         // 计算并绘制中心频率和带宽
-        double startFreq = _frequency - _spectrumSpan / 2 / 1000;
         double perFreq = _spectrumSpan / _data.length / 1000;
-        int centerIndex = (_startIndex + (_endIndex - _startIndex) / 2);
-        double centerFreq = perFreq * centerIndex + startFreq;
         double span = perFreq * (_endIndex - _startIndex) / 2 * 1000;
 
+        String centerFreqStr, startFreqStr, endFreqStr;
+        // 如果是全景，则显示中心频率和带宽，局部缩放则显示起始、终止频率和中心点频率
+        if (_startIndex == 0 && _endIndex == _data.length) {
+            centerFreqStr = String.format("%.3f", _frequency) + "MHz";
+            startFreqStr = "-" + String.format("%.3f", span) + "kHz";
+            endFreqStr = "+" + String.format("%.3f", span) + "kHz";
+        } else {
+            int centerIndex = (_startIndex + (_endIndex - _startIndex) / 2);
+            centerFreqStr = String.format("%.3f", centerIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + " MHz";
+            startFreqStr = String.format("%.3f", _startIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + " MHz";
+            endFreqStr = String.format("%.3f", _endIndex * perFreq + (_frequency - _spectrumSpan / 2 / 1000)) + " MHz";
+        }
+
         Rect freqRect = new Rect();
-        String freqStr = String.format("%.3f", centerFreq) + "MHz";
-        String startSpanStr = "-" + String.format("%.3f", span) + "kHz";
-        String stopSpanStr = "+" + String.format("%.3f", span) + "kHz";
         _paint.setColor(_gridColor);
-        _paint.getTextBounds(freqStr, 0, freqStr.length(), freqRect);
-        canvas.drawText(freqStr, _width - _marginRight - scaleWidth / 2 - freqRect.width() / 2, _height - _marginBottom + freqRect.height() + 5, _paint);
-        canvas.drawText(startSpanStr, _marginLeft + _scaleLineLength, _height - _marginBottom + freqRect.height() + 5, _paint);
-        canvas.drawText(stopSpanStr, _width - _marginRight - (float) _paint.measureText(stopSpanStr), _height - _marginBottom + freqRect.height() + 5, _paint);
+        _paint.getTextBounds(centerFreqStr, 0, centerFreqStr.length(), freqRect);
+        canvas.drawText(centerFreqStr, _width - _marginRight - scaleWidth / 2 - freqRect.width() / 2, _height - _marginBottom + freqRect.height() + 5, _paint);
+        canvas.drawText(startFreqStr, _marginLeft + _scaleLineLength, _height - _marginBottom + freqRect.height() + 5, _paint);
+        canvas.drawText(endFreqStr, _width - _marginRight - (float) _paint.measureText(endFreqStr), _height - _marginBottom + freqRect.height() + 5, _paint);
     }
 
     private void drawSelectRect(Canvas canvas) {

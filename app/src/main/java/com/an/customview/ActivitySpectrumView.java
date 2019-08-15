@@ -12,6 +12,7 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
 
     private SpectrumView _spectrumView1;
     private SpectrumView _spectrumView2;
+    private  final Random rand = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,6 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
         btnAuto.setOnClickListener(this);
 
         _runing = true;
-        final Random random = new Random();
 
         new Thread() {
             @Override
@@ -48,12 +48,6 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
                 super.run();
 
                 while (_runing) {
-//                    float[] data = new float[400];
-//                    for (int i = 0; i < data.length; i++) {
-//                        float level = random.nextInt(46);   // 0 - 45 之间的随机数
-//                        data[i] = level;
-//                    }
-
                     float[] data = getSpectremData();
 
                     _spectrumView1.setData(101.7, 2000, data);
@@ -102,7 +96,6 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
 
     private float[] getSpectremData() {
         float[] data = new float[801];
-        Random rand = new Random();
 
         for (int i = 0; i < 801; i++) {
             data[i] = (rand.nextInt(50 - (-150) + 1) + (-150)) / 10;
