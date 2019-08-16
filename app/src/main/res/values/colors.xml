@@ -5,7 +5,38 @@
     <color name="colorAccent">#D81B60</color>
 
 
-   <!--G-->
+    <!--R-->
+    <!--<color name="colorAccent">#D94336</color>-->
+    <!--<color name="colorAccent">#E06650</color>-->
+    <!--<color name="colorAccent">#E68466</color>-->
+    <!--<color name="colorAccent">#EEAA80</color>-->
+    <!--<color name="colorAccent">#F8DEA7</color>-->
+    <!--<color name="colorAccent">#ECECB1</color>-->
+    <!--<color name="colorAccent">#ACAC84</color>-->
+    <!--<color name="colorAccent">#A1A17D</color>-->
+    <!--<color name="colorAccent">#818166</color>-->
+    <!--<color name="colorAccent">#72725A</color>-->
+    <!--<color name="colorAccent">#555546</color>-->
+    <!--<color name="colorAccent">#373731</color>-->
+    <!--<color name="colorAccent">#262625</color>-->
+    <!--
+    217,67,54
+    224,102,80
+    230,132,102
+    238,170,128
+    248,222,167
+    236,236,177
+    172,172,132
+    161,161,125
+    129,129,102
+    114,114,90
+    85,85,70
+    55,55,49
+    38,38,37
+    -->
+
+
+    <!--G-->
     <!--<color name="colorAccent">#20CE26</color>-->
     <!--<color name="colorAccent">#1DD54F</color>-->
     <!--<color name="colorAccent">#18E191</color>-->
@@ -19,6 +50,82 @@
     <!--<color name="colorAccent">#1D514F</color>-->
     <!--<color name="colorAccent">#1F3534</color>-->
     <!--<color name="colorAccent">#203030</color>-->
+    <!--
+    32,206,38
+    29,213,79
+    24,225,145
+    21,231,183
+    18,238,222
+    17,233,225
+    21,185,179
+    23,155,150
+    25,133,129
+    28,104,101
+    29,81,79
+    31,53,52
+    32,48,48
+    -->
 
+
+    <!--B-->
+    <!--<color name="colorAccent">#E900F4</color>-->
+    <!--<color name="colorAccent">#D400F4</color>-->
+    <!--<color name="colorAccent">#9A00F4</color>-->
+    <!--<color name="colorAccent">#7C00F4</color>-->
+    <!--<color name="colorAccent">#5100F4</color>-->
+    <!--<color name="colorAccent">#4400F4</color>-->
+    <!--<color name="colorAccent">#2000F4</color>-->
+    <!--<color name="colorAccent">#1707C7</color>-->
+    <!--<color name="colorAccent">#190CA6</color>-->
+    <!--<color name="colorAccent">#1B1284</color>-->
+    <!--<color name="colorAccent">#1D1761</color>-->
+    <!--<color name="colorAccent">#1E1A4D</color>-->
+    <!--<color name="colorAccent">#201E33</color>-->
+    <!--
+    233,0,244
+    212,0,244
+    154,0,244
+    124,0,244
+    81,0,244
+    68,0,244
+    32,0,244
+    23,7,199
+    25,12,166
+    27,18,132
+    29,23,97
+    30,26,77
+    32,30,51
+    -->
+
+
+    <!--COLOR-->
+    <!--<color name="colorAccent">#D01A01</color>-->
+    <!--<color name="colorAccent">#DD6901</color>-->
+    <!--<color name="colorAccent">#EDCE01</color>-->
+    <!--<color name="colorAccent">#B8E301</color>-->
+    <!--<color name="colorAccent">#7AE701</color>-->
+    <!--<color name="colorAccent">#1EEC01</color>-->
+    <!--<color name="colorAccent">#1CEC48</color>-->
+    <!--<color name="colorAccent">#2FEA83</color>-->
+    <!--<color name="colorAccent">#47CEC5</color>-->
+    <!--<color name="colorAccent">#398F89</color>-->
+    <!--<color name="colorAccent">#2D5B58</color>-->
+    <!--<color name="colorAccent">#2E605D</color>-->
+    <!--<color name="colorAccent">#242F2F</color>-->
+    <!--
+    208,26,1
+    221,105,1
+    237,206,1
+    184,227,1
+    122,231,1
+    30,236,1
+    28,236,72
+    47,234,131
+    71,206,197
+    57,143,137
+    45,91,88
+    46,96,93
+    36,47,47
+    -->
 
 </resources>

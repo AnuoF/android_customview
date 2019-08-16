@@ -18,6 +18,8 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +50,7 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
     private Paint _paint;                  // 色带画笔
     public Bitmap _bitmap;                 // 雨点图缓存， _wCanvas 需要对其进行剪切
     private WaterfallCanvas _wCanvas;      // 瀑布图绘制类
+    private int[][] _colorArray;           // 默认的 4 个色带
     private boolean _bRool;                // 是否滚动
 
     private ExecutorService _executorService;      // 线程池服务
@@ -75,12 +78,15 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
             _marginBottom = typedArray.getInt(R.styleable.WaterfallView_marginBottom_Wv, 0);
             _marginLeft = typedArray.getInt(R.styleable.WaterfallView_marginLeft_Wv, 60);
             _marginRight = typedArray.getInt(R.styleable.WaterfallView_marginRight_Wv, 0);
-
+            _rainRow = typedArray.getInt(R.styleable.WaterfallView_rainRow_Wv, 200);
+            _zAxisMax = (short) typedArray.getInt(R.styleable.WaterfallView_zAxisMax_Wv, 80);
+            _zAxisMin = (short) typedArray.getInt(R.styleable.WaterfallView_zAxizMin_Wv, -20);
 
             _paint = new Paint();
             initColorGradient();
             _bRool = true;
             _executorService = Executors.newFixedThreadPool(5);
+            setOnTouchListener(this);
 
         } else {
             initView();
@@ -92,11 +98,37 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         _marginBottom = 0;
         _marginLeft = 60;
         _marginRight = 0;
+        _rainRow = 200;
+        _zAxisMin = -20;
+        _zAxisMax = 80;
 
         _paint = new Paint();
         initColorGradient();
         _bRool = true;
-        _executorService = Executors.newFixedThreadPool(1);
+        _executorService = Executors.newFixedThreadPool(5);
+        setOnTouchListener(this);
+    }
+
+    /**
+     * 在创建对象后初始化，设置对象的值
+     */
+    private void initCanvas() {
+        Drawable background = getBackground();
+        if (background instanceof ColorDrawable) {
+            ColorDrawable colorDrawable = (ColorDrawable) background;
+            _wCanvas._backgroundColor = colorDrawable.getColor();
+        }
+
+        if (_rainRow > _height) {
+            _rainRow = _height;
+        } else if (_rainRow <= 0) {
+            _rainRow = _height / 2;
+        }
+
+        _wCanvas._rainRow = _rainRow;
+        _wCanvas._ZAxisMax = _zAxisMax;
+        _wCanvas._ZAxisMin = _zAxisMin;
+        _wCanvas._colors = _colors;
     }
 
     @Override
@@ -109,6 +141,7 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         if (_bitmap == null) {
             _bitmap = Bitmap.createBitmap(_width - _marginLeft - _marginRight, _height - _marginTop - _marginBottom, Bitmap.Config.ARGB_8888);
             _wCanvas = new WaterfallCanvas(new Canvas(_bitmap), this);
+            initCanvas();
         }
     }
 
@@ -162,26 +195,77 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         }
     }
 
-
     /**
      * 初始化色带
      */
     private void initColorGradient() {
-        // G
-        _colors = new int[13];
-        _colors[0] = Color.rgb(32, 206, 38);
-        _colors[1] = Color.rgb(29, 213, 79);
-        _colors[2] = Color.rgb(24, 225, 145);
-        _colors[3] = Color.rgb(21, 231, 183);
-        _colors[4] = Color.rgb(18, 238, 222);
-        _colors[5] = Color.rgb(17, 233, 225);
-        _colors[6] = Color.rgb(21, 185, 179);
-        _colors[7] = Color.rgb(23, 155, 150);
-        _colors[8] = Color.rgb(25, 133, 129);
-        _colors[9] = Color.rgb(28, 104, 101);
-        _colors[10] = Color.rgb(29, 81, 79);
-        _colors[11] = Color.rgb(31, 53, 52);
-        _colors[12] = Color.rgb(32, 48, 48);
+        _colorArray = new int[4][13];
+        _colorArray[0] = new int[]{
+                // RED
+                Color.rgb(217, 67, 54),
+                Color.rgb(224, 102, 80),
+                Color.rgb(230, 132, 102),
+                Color.rgb(238, 170, 128),
+                Color.rgb(248, 222, 167),
+                Color.rgb(236, 236, 177),
+                Color.rgb(172, 172, 132),
+                Color.rgb(161, 161, 125),
+                Color.rgb(129, 129, 102),
+                Color.rgb(114, 114, 90),
+                Color.rgb(85, 85, 70),
+                Color.rgb(55, 55, 49),
+                Color.rgb(38, 38, 37)
+        };
+        _colorArray[1] = new int[]{
+                // GREEN
+                Color.rgb(32, 206, 38),
+                Color.rgb(29, 213, 79),
+                Color.rgb(24, 225, 145),
+                Color.rgb(21, 231, 183),
+                Color.rgb(18, 238, 222),
+                Color.rgb(17, 233, 225),
+                Color.rgb(21, 185, 179),
+                Color.rgb(23, 155, 150),
+                Color.rgb(25, 133, 129),
+                Color.rgb(28, 104, 101),
+                Color.rgb(29, 81, 79),
+                Color.rgb(31, 53, 52),
+                Color.rgb(32, 48, 48)
+        };
+        _colorArray[2] = new int[]{
+                // BLUE
+                Color.rgb(233, 0, 244),
+                Color.rgb(212, 0, 244),
+                Color.rgb(154, 0, 244),
+                Color.rgb(124, 0, 244),
+                Color.rgb(81, 0, 244),
+                Color.rgb(68, 0, 244),
+                Color.rgb(32, 0, 244),
+                Color.rgb(23, 7, 199),
+                Color.rgb(25, 12, 166),
+                Color.rgb(27, 18, 132),
+                Color.rgb(29, 23, 97),
+                Color.rgb(30, 26, 77),
+                Color.rgb(32, 30, 51)
+        };
+        _colorArray[3] = new int[]{
+                // COLOR
+                Color.rgb(208, 26, 1),
+                Color.rgb(221, 105, 1),
+                Color.rgb(237, 206, 1),
+                Color.rgb(184, 227, 1),
+                Color.rgb(122, 231, 1),
+                Color.rgb(30, 236, 1),
+                Color.rgb(28, 236, 72),
+                Color.rgb(47, 234, 131),
+                Color.rgb(71, 206, 197),
+                Color.rgb(57, 143, 137),
+                Color.rgb(45, 91, 88),
+                Color.rgb(46, 96, 93),
+                Color.rgb(36, 47, 47),
+        };
+
+        _colors = _colorArray[3];
     }
 
     /**
@@ -195,12 +279,10 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         canvas.drawRect(0, 0, _marginLeft, _height, _paint);
     }
 
-    private void actionDown(MotionEvent event) {
-        if (Utils.IsPointInRect(0, 0, _marginLeft, _height, (int) event.getX(), (int) event.getY())) {
-
-        } else {
-
-        }
+    @Override
+    public void onSpectrumFinished() {
+        // 回调完成之后，调用重绘
+        postInvalidate();
     }
 
     @Override
@@ -209,25 +291,46 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
             case MotionEvent.ACTION_DOWN:
                 actionDown(motionEvent);
                 break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
             case MotionEvent.ACTION_MOVE:
+                actionMove(motionEvent);
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                actionPointerDown(motionEvent);
                 break;
             case MotionEvent.ACTION_POINTER_UP:
+                actionPointerUp(motionEvent);
                 break;
             case MotionEvent.ACTION_UP:
-                break;
             case MotionEvent.ACTION_CANCEL:
+                actionUpCancel(motionEvent);
                 break;
         }
 
         return true;
     }
 
-    @Override
-    public void onSpectrumFinished() {
-        // 回调完成之后，调用重绘
-        postInvalidate();
+    private void actionDown(MotionEvent event) {
+        if (Utils.IsPointInRect(0, 0, _marginLeft, _height, (int) event.getX(), (int) event.getY())) {
+
+        } else {
+
+        }
+    }
+
+    private void actionMove(MotionEvent event) {
+
+    }
+
+    private void actionPointerDown(MotionEvent event) {
+
+    }
+
+    private void actionPointerUp(MotionEvent event) {
+
+    }
+
+    private void actionUpCancel(MotionEvent event) {
+
     }
 
     private void showInfo(String msg) {

@@ -1,7 +1,6 @@
 package com.an.view;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,7 +14,8 @@ class WaterfallCanvas {
     public short _ZAxisMax;                // Z轴最大值
     public short _ZAxisMin;                // Z轴最小智
     public int _backgroundColor;           // 背景颜色
-    public int[] _colors = new int[13];    // 色带
+    public int[] _colors;                  // 色带
+    // 以上变量由外部赋值
 
     private List<byte[]> _data;            // 数据映射到颜色的二维数组
     private double _frequency;
@@ -49,20 +49,6 @@ class WaterfallCanvas {
         _ZAxisMax = 80;
         _ZAxisMin = -20;
         _bRool = true;
-
-        _colors[0] = Color.rgb(32, 206, 38);
-        _colors[1] = Color.rgb(29, 213, 79);
-        _colors[2] = Color.rgb(24, 225, 145);
-        _colors[3] = Color.rgb(21, 231, 183);
-        _colors[4] = Color.rgb(18, 238, 222);
-        _colors[5] = Color.rgb(17, 233, 225);
-        _colors[6] = Color.rgb(21, 185, 179);
-        _colors[7] = Color.rgb(23, 155, 150);
-        _colors[8] = Color.rgb(25, 133, 129);
-        _colors[9] = Color.rgb(28, 104, 101);
-        _colors[10] = Color.rgb(29, 81, 79);
-        _colors[11] = Color.rgb(31, 53, 52);
-        _colors[12] = Color.rgb(32, 48, 48);
 
         _backgroundColor = Color.BLACK;
         _startIndex = 0;
@@ -104,7 +90,6 @@ class WaterfallCanvas {
         _data.add(colors);
 
         synchronized (_lockObj) {
-//            drawSpectrum();
             drawWaterfall();
         }
 
@@ -181,7 +166,6 @@ class WaterfallCanvas {
                 Bitmap bitmap = Bitmap.createBitmap(_waterFallView._bitmap, 0, (int) perHeight, _width, (int) ((_data.size() - 1) * perHeight));   // perHeight 必须 >= 1，也就是 _rainRow 必须 <= _height
                 _canvas.drawBitmap(bitmap, 0, 0, _rainPaint);
                 bitmap.recycle();
-                bitmap = null;
 
                 for (int h = _startIndex; h < _endIndex; h++) {
                     if (h >= _endIndex)
@@ -189,8 +173,12 @@ class WaterfallCanvas {
 
                     int width = (int) (h * perWidth);
                     int height = (int) ((_data.size() - 1) * perHeight);
-                    _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(_data.size() - 1)[h]]);   // 只画最后一包
-                    _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
+                    try {
+                        _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(_data.size() - 1)[h]]);   // 只画最后一包
+                        _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
