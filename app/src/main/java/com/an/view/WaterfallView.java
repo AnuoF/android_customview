@@ -25,30 +25,37 @@ import android.widget.Toast;
 
 import com.an.customview.R;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * 自定义频谱瀑布图控件（语谱图）
  */
 public class WaterfallView extends View implements View.OnTouchListener, OnDrawFinishedListener {
 
-    private int[] _colors = new int[13];   // 色带
+    private int _rainRow;                   // 雨点图行数，Y轴数据量，应 <= _height
+    private short _zAxisMax;                // Z轴最大值
+    private short _zAxisMin;                // Z轴最小智
+    private int[] _colors;                  // 色带
 
-    private int _marginTop;               // 上边距
-    private int _marginBottom;            // 下边距
-    private int _marginLeft;              // 左边距
-    private int _marginRight;             // 右边距
+    private int _marginTop;                // 上边距
+    private int _marginBottom;             // 下边距
+    private int _marginLeft;               // 左边距
+    private int _marginRight;              // 右边距
 
-    private int _width;
-    private int _height;
+    private int _width;                    // View 宽
+    private int _height;                   // View 高
     private Paint _paint;                  // 色带画笔
-    private Bitmap _bitmap;                // 雨点图缓存
-    private WaterfallCanvas _wCanvas;
-    private boolean _bRool;                 // 是否滚动
+    public Bitmap _bitmap;                 // 雨点图缓存， _wCanvas 需要对其进行剪切
+    private WaterfallCanvas _wCanvas;      // 瀑布图绘制类
+    private boolean _bRool;                // 是否滚动
+
+    private ExecutorService _executorService;      // 线程池服务
 
 
     public WaterfallView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
-
     }
 
     public WaterfallView(Context context, AttributeSet attrs) {
@@ -61,6 +68,37 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         initView();
     }
 
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaterfallView);
+        if (typedArray != null) {
+            _marginTop = typedArray.getInt(R.styleable.WaterfallView_marginTop_Wv, 0);
+            _marginBottom = typedArray.getInt(R.styleable.WaterfallView_marginBottom_Wv, 0);
+            _marginLeft = typedArray.getInt(R.styleable.WaterfallView_marginLeft_Wv, 60);
+            _marginRight = typedArray.getInt(R.styleable.WaterfallView_marginRight_Wv, 0);
+
+
+            _paint = new Paint();
+            initColorGradient();
+            _bRool = true;
+            _executorService = Executors.newFixedThreadPool(5);
+
+        } else {
+            initView();
+        }
+    }
+
+    private void initView() {
+        _marginTop = 0;
+        _marginBottom = 0;
+        _marginLeft = 60;
+        _marginRight = 0;
+
+        _paint = new Paint();
+        initColorGradient();
+        _bRool = true;
+        _executorService = Executors.newFixedThreadPool(1);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -70,7 +108,7 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
 
         if (_bitmap == null) {
             _bitmap = Bitmap.createBitmap(_width - _marginLeft - _marginRight, _height - _marginTop - _marginBottom, Bitmap.Config.ARGB_8888);
-            _wCanvas = new WaterfallCanvas(new Canvas(_bitmap));
+            _wCanvas = new WaterfallCanvas(new Canvas(_bitmap), this);
         }
     }
 
@@ -105,13 +143,13 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
      */
     public void setData(final double frequency, final double span, final float[] data) {
         if (_wCanvas != null) {
-            new Thread() {
+            _executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    super.run();
-                    _wCanvas.setData(WaterfallView.this, frequency, span, data);
+                    if (_wCanvas != null)
+                        _wCanvas.setData(WaterfallView.this, frequency, span, data);
                 }
-            }.start();
+            });
         }
     }
 
@@ -124,38 +162,13 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
         }
     }
 
-    private void initView(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaterfallView);
-        if (typedArray != null) {
-            _marginTop = typedArray.getInt(R.styleable.WaterfallView_marginTop_Wv, 0);
-            _marginBottom = typedArray.getInt(R.styleable.WaterfallView_marginBottom_Wv, 0);
-            _marginLeft = typedArray.getInt(R.styleable.WaterfallView_marginLeft_Wv, 60);
-            _marginRight = typedArray.getInt(R.styleable.WaterfallView_marginRight_Wv, 0);
-
-            _paint = new Paint();
-            initColorGradient();
-            _bRool = true;
-        } else {
-            initView();
-        }
-    }
-
-    private void initView() {
-        _marginTop = 0;
-        _marginBottom = 0;
-        _marginLeft = 60;
-        _marginRight = 0;
-
-        _paint = new Paint();
-        initColorGradient();
-        _bRool = true;
-    }
 
     /**
      * 初始化色带
      */
     private void initColorGradient() {
         // G
+        _colors = new int[13];
         _colors[0] = Color.rgb(32, 206, 38);
         _colors[1] = Color.rgb(29, 213, 79);
         _colors[2] = Color.rgb(24, 225, 145);
