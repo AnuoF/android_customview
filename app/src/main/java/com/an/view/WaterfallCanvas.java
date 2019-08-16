@@ -34,6 +34,7 @@ class WaterfallCanvas {
 
     private boolean _bRool;
     private final Object _lockObj = new Object();
+    private OnDrawFinishedListener _callback;
 
 
     public WaterfallCanvas(Canvas canvas, WaterfallView waterfallView) {
@@ -53,133 +54,113 @@ class WaterfallCanvas {
         _backgroundColor = Color.BLACK;
         _startIndex = 0;
         _indexChanged = false;
+        _callback = (OnDrawFinishedListener) waterfallView;
     }
 
-    public void setData(OnDrawFinishedListener callback, double frequency, double span, float[] data) {
-        _endIndex = data.length;
-
-        if (_data.size() == 0) {
-            _frequency = frequency;
-            _spectrumSpan = span;
-            _pointCount = data.length;
-        } else if (frequency != _frequency || span != _spectrumSpan || data.length != _pointCount) {
-            clear();
-            _frequency = frequency;
-            _spectrumSpan = span;
-            _pointCount = data.length;
-        }
-
-        byte[] colors = new byte[data.length];
-        for (int i = 0; i < data.length; i++) {
-            byte index;
-            float value = data[i];
-            if (value <= _ZAxisMin) {
-                index = (byte) (_bRool ? 1 : 0);
-            } else if (value >= _ZAxisMax) {
-                index = (byte) (_colors.length - 1);
-            } else {
-                index = (byte) ((value - _ZAxisMin) / (_ZAxisMax - _ZAxisMin) * (_colors.length - 1));
+    public void setData(double frequency, double span, float[] data) {
+        synchronized (_lockObj) {
+            if (_endIndex == 0) {
+                _startIndex = 0;
+                _endIndex = data.length;
             }
 
-            colors[i] = index;
-        }
+            if (_data.size() == 0) {
+                _frequency = frequency;
+                _spectrumSpan = span;
+                _pointCount = data.length;
+            } else if (frequency != _frequency || span != _spectrumSpan || data.length != _pointCount) {
+                clear();
+                _frequency = frequency;
+                _spectrumSpan = span;
+                _pointCount = data.length;
+            }
 
-        if (_data.size() >= _rainRow) {
-            _data.remove(0);
-        }
-        _data.add(colors);
+            byte[] colors = new byte[data.length];
+            for (int i = 0; i < data.length; i++) {
+                byte index;
+                float value = data[i];
+                if (value <= _ZAxisMin) {
+                    index = (byte) (_bRool ? 1 : 0);
+                } else if (value >= _ZAxisMax) {
+                    index = (byte) (_colors.length - 1);
+                } else {
+                    index = (byte) ((value - _ZAxisMin) / (_ZAxisMax - _ZAxisMin) * (_colors.length - 1));
+                }
 
-        synchronized (_lockObj) {
+                colors[i] = index;
+            }
+
+            if (_data.size() >= _rainRow) {
+                _data.remove(0);
+            }
+            _data.add(colors);
+
             drawWaterfall();
         }
 
-        callback.onSpectrumFinished();
+        _callback.onSpectrumFinished();
+    }
+
+    public void zoneRange(int startIndex, int endIndex) {
+        if (_startIndex == startIndex && _endIndex == endIndex)
+            return;
+
+        synchronized (_lockObj) {
+            _startIndex = startIndex;
+            _endIndex = endIndex;
+            _indexChanged = true;
+
+            drawWaterfall();
+        }
+
+        _callback.onSpectrumFinished();
     }
 
     public void clear() {
-        _data.clear();
-    }
+        synchronized (_lockObj) {
+            _startIndex = 0;
+            _endIndex = 0;
+            _data.clear();
 
-    /**
-     * 画频谱
-     */
-    private void drawSpectrum() {
-        if (_data == null || _data.size() == 0)
-            return;
-
-        float perWidth = (_width) / (float) _pointCount;       // 每个方格的 宽
-        float perHeight = (_height) / (float) _rainRow;        // 每个方格的 高
-
-        for (int v = 0; v < _data.size(); v++) {
-            // 先横后竖
-            for (int h = 0; h < _pointCount; h++) {
-                int width = (int) (h * perWidth);
-                int height = (int) (v * perHeight);
-                _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(v)[h]]);
-                _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
-            }
+            drawWaterfall();
         }
+
+        _callback.onSpectrumFinished();
     }
 
     /**
      * 绘制瀑布图。为保证效率，不需要每次全部重绘，而是绘制新增的数据即可。
      */
     private void drawWaterfall() {
-        if (_data == null || _data.size() == 0) {
-            _rainPaint.setColor(_backgroundColor);
-            _canvas.drawRect(0, 0, _width, _height, _rainPaint);
+        if (_data == null || _data.size() == 0)
             return;
-        }
+        if (_waterFallView == null || _waterFallView._bitmap == null)
+            return;
 
-        float perWidth = (_width) / (float) _pointCount;       // 每个方格的 宽
+        float perWidth = (_width) / (float) (_endIndex - _startIndex);       // 每个方格的 宽
         float perHeight = (_height) / (float) _rainRow;        // 每个方格的 高
 
-        if (_indexChanged) {
-            // 如果Index已改变，则需要全部重绘
-            for (int v = 0; v < _data.size(); v++) {
-                // 先横后竖
-                for (int h = _startIndex; h < _endIndex; h++) {
-                    int width = (int) (h * perWidth);
-                    int height = (int) (v * perHeight);
-                    _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(v)[h]]);
-                    _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
-                }
+        if (_data.size() == 1) {
+            for (int h = _startIndex; h < _endIndex; h++) {
+                int width = (int) ((h - _startIndex) * perWidth);
+                int height = 0;
+                _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(0)[h]]);
+                _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
             }
-            _canvas.save();
-            _indexChanged = false;
-        } else {
-            // 如果Index没有改变，则只需要绘制新到的数据即可，现在是到一包画一次，所以不需判断哪些是新的数据
-            if (_data.size() <= 1) {
-                // 只有 1 包数据，则直接画
-                for (int h = _startIndex; h < _endIndex; h++) {
-                    int width = (int) (h * perWidth);
-                    int height = (int) perHeight;
-                    _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(_data.size() - 1)[h]]);   // 只会最后一包
-                    _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
-                }
-            } else {
-                if (_waterFallView == null || _waterFallView._bitmap == null)
-                    return;
+        }else {
+            // 先绘制之前的 Bitmap，然后再画新的数据
+            Bitmap bitmap = Bitmap.createBitmap(_waterFallView._bitmap, 0, (int) perHeight, _width, (int) ((_data.size() - 1) * perHeight));   // perHeight 必须 >= 1，也就是 _rainRow 必须 <= _height
+            _canvas.drawBitmap(bitmap, 0, 0, _rainPaint);
+            bitmap.recycle();
 
-                // 先绘制之前的 Bitmap，然后再画新的数据
-//                Bitmap bitmap = _waterFallView._bitmap.copy(Bitmap.Config.ARGB_8888, true);
-                Bitmap bitmap = Bitmap.createBitmap(_waterFallView._bitmap, 0, (int) perHeight, _width, (int) ((_data.size() - 1) * perHeight));   // perHeight 必须 >= 1，也就是 _rainRow 必须 <= _height
-                _canvas.drawBitmap(bitmap, 0, 0, _rainPaint);
-                bitmap.recycle();
+            for (int h = _startIndex; h < _endIndex; h++) {
+                if (h >= _endIndex)
+                    break;
 
-                for (int h = _startIndex; h < _endIndex; h++) {
-                    if (h >= _endIndex)
-                        break;
-
-                    int width = (int) (h * perWidth);
-                    int height = (int) ((_data.size() - 1) * perHeight);
-                    try {
-                        _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(_data.size() - 1)[h]]);   // 只画最后一包
-                        _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                int width = (int) ((h - _startIndex) * perWidth);
+                int height = (int) ((_data.size() - 1) * perHeight);
+                _rainPaint.setColor(_colors[_colors.length - 1 - _data.get(_data.size() - 1)[h]]);   // 只画最后一包
+                _canvas.drawRect(width, height, width + perWidth, height + perHeight, _rainPaint);
             }
         }
     }

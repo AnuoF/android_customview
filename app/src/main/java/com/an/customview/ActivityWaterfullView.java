@@ -35,7 +35,7 @@ public class ActivityWaterfullView extends BaseActivity {
                     _waterfallView.setData(101.7, 2000, data);
 
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -52,9 +52,13 @@ public class ActivityWaterfullView extends BaseActivity {
             data[i] = (rand.nextInt(50 - (-150) + 1) + (-150)) / 10;
         }
 
+//        data[49] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+//        data[50] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
+//        data[51] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+
         data[399] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
         data[400] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
-        data[401] =  27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+        data[401] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
 
 //        data[99] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
 //        data[100] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
