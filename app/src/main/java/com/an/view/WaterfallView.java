@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 /**
  * 自定义频谱瀑布图控件（语谱图）
  */
-public class WaterfallView extends View implements View.OnTouchListener, OnDrawFinishedListener {
+public class WaterfallView extends View implements View.OnTouchListener, OnDrawFinishedListener, GradientColorDialog.OnItemClickListener {
 
     private int _rainRow;                   // 雨点图行数，Y轴数据量，应 <= _height
     private short _zAxisMax;                // Z轴最大值
@@ -54,6 +54,8 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
     private boolean _bRool;                // 是否滚动
 
     private ExecutorService _executorService;      // 线程池服务
+
+    private GradientColorDialog _dialog;    // 色带选择对话框
 
 
     public WaterfallView(Context context, AttributeSet attrs, int defStyle) {
@@ -286,6 +288,11 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
     }
 
     @Override
+    public void OnClick(GradientColorDialog dialog, View view) {
+
+    }
+
+    @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -333,8 +340,21 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
 
     }
 
+    /**
+     * 显示色带对话框
+     */
+    private void showGradientColorDialog() {
+        if (_dialog == null) {
+            _dialog = new GradientColorDialog(this.getContext(), R.layout.layout_gradient_color_dialog, new int[]{});
+            _dialog.setOnItemClickListener(this);
+        } else {
+            _dialog.show();
+        }
+    }
+
     private void showInfo(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
+
 
 }

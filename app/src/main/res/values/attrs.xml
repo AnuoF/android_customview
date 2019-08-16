@@ -128,7 +128,10 @@
         <attr name="rainRow_Wv" format="integer"/>
         <attr name="zAxisMax_Wv" format="integer"/>
         <attr name="zAxizMin_Wv" format="integer"/>
+    </declare-styleable>
 
+    <declare-styleable name="GradientColorView">
+        <attr name="gradientColors" format="integer"/>
     </declare-styleable>
 
 </resources>

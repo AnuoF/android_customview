@@ -3,7 +3,7 @@ package com.an.view;
 /**
  * 瀑布图绘制回调接口
  */
-public interface OnDrawFinishedListener {
+ interface OnDrawFinishedListener {
 
     /**
      * 瀑布图绘制完成
