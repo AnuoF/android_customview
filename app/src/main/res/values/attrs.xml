@@ -117,22 +117,49 @@
         <!--右边距-->
         <attr name="margin_right_sv" format="integer" />
         <!--选择区域的颜色-->
-        <attr name="select_rect_color_sv" format="color"/>
+        <attr name="select_rect_color_sv" format="color" />
     </declare-styleable>
 
     <declare-styleable name="WaterfallView">
-        <attr name="marginTop_Wv" format="integer"/>
-        <attr name="marginBottom_Wv" format="integer"/>
-        <attr name="marginLeft_Wv" format="integer"/>
-        <attr name="marginRight_Wv" format="integer"/>
-        <attr name="rainRow_Wv" format="integer"/>
-        <attr name="zAxisMax_Wv" format="integer"/>
-        <attr name="zAxizMin_Wv" format="integer"/>
-        <attr name="colorIndex_Wv" format="integer"/>
+        <attr name="marginTop_Wv" format="integer" />
+        <attr name="marginBottom_Wv" format="integer" />
+        <attr name="marginLeft_Wv" format="integer" />
+        <attr name="marginRight_Wv" format="integer" />
+        <attr name="rainRow_Wv" format="integer" />
+        <attr name="zAxisMax_Wv" format="integer" />
+        <attr name="zAxizMin_Wv" format="integer" />
+        <attr name="colorIndex_Wv" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="GradientColorView">
-        <attr name="gradientColors" format="integer"/>
+        <attr name="gradientColors" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="SpectrumWaterfallView">
+        <attr name="marginTop" format="integer" />
+        <attr name="marginBottom" format="integer" />
+        <attr name="marginLeft" format="integer" />
+        <attr name="marginRight" format="integer" />
+        <attr name="girdColor" format="color" />
+        <attr name="gridCount" format="integer" />
+        <attr name="unitText" format="string" />
+        <attr name="unitSize" format="integer" />
+        <attr name="unitColor" format="color" />
+        <attr name="maxValue" format="integer" />
+        <attr name="minValue" format="integer" />
+        <attr name="selectZoneColor" format="color" />
+        <attr name="scaleFontSize" format="integer" />
+        <attr name="realTimeLineColor" format="color" />
+        <attr name="maxValueLineColor" format="color" />
+        <attr name="minValueLineColor" format="color" />
+        <attr name="showMode">
+            <enum name="Both" value="0" />
+            <enum name="Spectrum" value="1" />
+            <enum name="Waterfall" value="2" />
+        </attr>
+
+        <attr name="gradientColorIndex" format="integer" />
+
     </declare-styleable>
 
 </resources>
