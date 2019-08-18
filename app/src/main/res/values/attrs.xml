@@ -152,6 +152,7 @@
         <attr name="realTimeLineColor" format="color" />
         <attr name="maxValueLineColor" format="color" />
         <attr name="minValueLineColor" format="color" />
+        <attr name="spectrumMarginBottom" format="integer" />
         <attr name="showMode">
             <enum name="Both" value="0" />
             <enum name="Spectrum" value="1" />
