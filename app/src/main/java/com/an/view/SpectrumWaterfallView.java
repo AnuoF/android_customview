@@ -349,7 +349,7 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
     }
 
     @Override
-    public void onSpectrumFinished() {
+    public void onDrawFinished() {
         postInvalidate();   // 图形绘制完成之后通知重绘
     }
 
@@ -423,7 +423,7 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
                 break;
         }
 
-        callback.onSpectrumFinished();
+        callback.onDrawFinished();
     }
 
     /**

@@ -98,7 +98,7 @@ class WaterfallCanvas {
             drawWaterfall();
         }
 
-        _callback.onSpectrumFinished();
+        _callback.onDrawFinished();
     }
 
     public void zoneRange(int startIndex, int endIndex) {
@@ -113,7 +113,7 @@ class WaterfallCanvas {
             drawWaterfall();
         }
 
-        _callback.onSpectrumFinished();
+        _callback.onDrawFinished();
     }
 
     public void clear() {
@@ -125,7 +125,7 @@ class WaterfallCanvas {
             drawWaterfall();
         }
 
-        _callback.onSpectrumFinished();
+        _callback.onDrawFinished();
     }
 
     /**

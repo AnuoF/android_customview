@@ -370,7 +370,7 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
     }
 
     @Override
-    public void onSpectrumFinished() {
+    public void onDrawFinished() {
         // 回调完成之后，调用重绘
         postInvalidate();
     }
