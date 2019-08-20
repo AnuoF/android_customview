@@ -1,5 +1,5 @@
 /**
- * @Title: SpectrumWaterfallView.java
+ * @Title: GeneralSpectrumChart.java
  * @Package: com.an.view
  * @Description: 频谱图和瀑布图的组合控件
  * @Author: AnuoF
@@ -15,9 +15,12 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -26,13 +29,14 @@ import android.view.View;
 
 import com.an.customview.R;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * 频谱图和瀑布图的组合控件
  */
-public class SpectrumWaterfallView extends View implements View.OnTouchListener, OnDrawFinishedListener {
+public class GeneralSpectrumChart extends View implements View.OnTouchListener, OnDrawFinishedListener {
 
     // View定义字段
     private int _marginTop;                   // 上边距
@@ -54,6 +58,7 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
     private int _minValueLineColor;           // 最小值线条颜色
     private int _scaleFontSize;               // 刻度字体大小
     private int _spectrumMarginBottom;        // 频谱图底部预留的间距
+    private int _rainRow;                     // 瀑布图显示的行数
 
     private int _width;                       // 测量 宽
     private int _height;                      // 测量 高
@@ -68,13 +73,16 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
 
     private Paint _waterfallPaint;            // 瀑布图画笔
     private int[] _gradientColors;            // 色带渐变色
+    private int _drawCount;                   // 已绘制多少行
+    private boolean _bRool = true;            // 瀑布图是否滚动
 
     // 频谱数据
     private double _frequency;                // 中心频率
     private double _spectrumSpan;             // 频谱带宽
     private float[] _data;                    // 频谱数据
-    private float[] _max;                     // 最大值
-    private float[] _min;                     // 最小值
+    private float[] _maxData;                 // 最大值
+    private float[] _minData;                 // 最小值
+
 
     private int _startIndex;                  // 提取数据的起始位置（用于数据缩放）
     private int _endIndex;                    // 提取数据的终止位置（用于数据缩放）
@@ -95,45 +103,46 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
     private Canvas _spectrumCanvas;
 
 
-    public SpectrumWaterfallView(Context context, AttributeSet attrs, int defStyle) {
+    public GeneralSpectrumChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public SpectrumWaterfallView(Context context, AttributeSet attrs) {
+    public GeneralSpectrumChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public SpectrumWaterfallView(Context context) {
+    public GeneralSpectrumChart(Context context) {
         super(context);
         initView();
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(R.styleable.SpectrumWaterfallView);
+        TypedArray typedArray = context.obtainStyledAttributes(R.styleable.GeneralSpectrumChart);
         if (typedArray != null) {
-            _marginTop = typedArray.getInt(R.styleable.SpectrumWaterfallView_marginTop, 5);
-            _marginBottom = typedArray.getInt(R.styleable.SpectrumWaterfallView_marginBottom, 5);
-            _marginLeft = typedArray.getInt(R.styleable.SpectrumWaterfallView_marginLeft, 50);
-            _marginRight = typedArray.getInt(R.styleable.SpectrumWaterfallView_marginRight, 5);
-            _gridColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_gridCount, Color.argb(200, 255, 255, 255));
-            _gridCount = typedArray.getInt(R.styleable.SpectrumWaterfallView_gridCount, 10);
-            _unitText = typedArray.getString(R.styleable.SpectrumWaterfallView_unitText);
-            _unitSize = typedArray.getInt(R.styleable.SpectrumWaterfallView_unitSize, 20);
-            _unitColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_unitColor, Color.WHITE);
-            _maxValue = typedArray.getInt(R.styleable.SpectrumWaterfallView_maxValue, 80);
-            _minValue = typedArray.getInt(R.styleable.SpectrumWaterfallView_minValue, -20);
-            _selectZoneColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_selectZoneColor, Color.argb(50, 255, 0, 0));
-            int mode = typedArray.getInt(R.styleable.SpectrumWaterfallView_showMode, 0);
+            _marginTop = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginTop, 5);
+            _marginBottom = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginBottom, 5);
+            _marginLeft = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginLeft, 50);
+            _marginRight = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginRight, 5);
+            _gridColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_gridCount, Color.argb(200, 255, 255, 255));
+            _gridCount = typedArray.getInt(R.styleable.GeneralSpectrumChart_gridCount, 10);
+            _unitText = typedArray.getString(R.styleable.GeneralSpectrumChart_unitText);
+            _unitSize = typedArray.getInt(R.styleable.GeneralSpectrumChart_unitSize, 20);
+            _unitColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_unitColor, Color.WHITE);
+            _maxValue = typedArray.getInt(R.styleable.GeneralSpectrumChart_maxValue, 80);
+            _minValue = typedArray.getInt(R.styleable.GeneralSpectrumChart_minValue, -20);
+            _selectZoneColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_selectZoneColor, Color.argb(50, 255, 0, 0));
+            int mode = typedArray.getInt(R.styleable.GeneralSpectrumChart_showMode, 0);
             _showMode = ShowMode.values()[mode];
-            int gradientColorIndex = typedArray.getInt(R.styleable.SpectrumWaterfallView_gradientColorIndex, 3);
+            int gradientColorIndex = typedArray.getInt(R.styleable.GeneralSpectrumChart_gradientColorIndex, 3);
             initColorGradient(gradientColorIndex);
-            _realTimeLineColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_realTimeLineColor, Color.GREEN);
-            _maxValueLineColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_maxValueLineColor, Color.RED);
-            _minValueLineColor = typedArray.getColor(R.styleable.SpectrumWaterfallView_minValueLineColor, Color.BLUE);
-            _scaleFontSize = typedArray.getInt(R.styleable.SpectrumWaterfallView_scaleFontSize, 20);
-            _spectrumMarginBottom = typedArray.getInt(R.styleable.SpectrumWaterfallView_spectrumMarginBottom, 30);
+            _realTimeLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_realTimeLineColor, Color.GREEN);
+            _maxValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_maxValueLineColor, Color.RED);
+            _minValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_minValueLineColor, Color.BLUE);
+            _scaleFontSize = typedArray.getInt(R.styleable.GeneralSpectrumChart_scaleFontSize, 20);
+            _spectrumMarginBottom = typedArray.getInt(R.styleable.GeneralSpectrumChart_spectrumMarginBottom, 30);
+            _rainRow = typedArray.getInt(R.styleable.GeneralSpectrumChart_rainRow, 500);
 
             _executorService = Executors.newFixedThreadPool(5);
             _scaleLineLength = 5;
@@ -141,6 +150,10 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
             _waterfallPaint = new Paint();
             _paint = new Paint();
             _initFinished = false;
+
+            _data = new float[0];
+            _maxData = new float[0];
+            _minData = new float[0];
 
 
         } else {
@@ -168,6 +181,7 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
         _minValueLineColor = Color.BLUE;
         _scaleFontSize = 20;
         _spectrumMarginBottom = 30;
+        _rainRow = 500;
 
         _executorService = Executors.newFixedThreadPool(5);
         _scaleLineLength = 5;
@@ -175,6 +189,10 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
         _waterfallPaint = new Paint();
         _paint = new Paint();
         _initFinished = false;
+
+        _data = new float[0];
+        _maxData = new float[0];
+        _minData = new float[0];
 
     }
 
@@ -274,6 +292,8 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
             _spectrumSpan = spectrumSpan;
             _data = data;
         }
+
+        _data = data;
 
         executeDraw(false);
     }
@@ -390,12 +410,13 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
                     _waterfallCanvas = new Canvas(_waterfallBmp);
                 }
 
+                _spectrumCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);    // 清空画布
                 _spectrumPaint.setColor(_viewBackColor);
                 _spectrumCanvas.drawRect(0, 0, _spectrumBmp.getWidth(), _spectrumBmp.getHeight(), _spectrumPaint);
                 drawSpectrumAxis();
                 drawSpectrumLine();
 
-                drawWaterfall();
+                drawWaterfall(newBmp);
                 break;
             case Spectrum:
                 if (_spectrumBmp == null) {
@@ -419,7 +440,7 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
                     _waterfallBmp = Bitmap.createBitmap(_width, _height / 2, Bitmap.Config.ARGB_8888);
                     _waterfallCanvas = new Canvas(_waterfallBmp);
                 }
-                drawWaterfall();
+                drawWaterfall(newBmp);
                 break;
         }
 
@@ -563,8 +584,59 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
         _spectrumCanvas.drawText(endFreqStr, w - _marginRight - (float) _spectrumPaint.measureText(endFreqStr), h - _spectrumMarginBottom + freqRect.height() + 10, _spectrumPaint);
     }
 
-    private void drawWaterfall() {
+    private void drawWaterfall(boolean newBmp) {
+        if (newBmp) {
+            _waterfallPaint = new Paint();
+            int height = _waterfallBmp.getHeight();
+            LinearGradient linearGradient = new LinearGradient(0, 0, _marginLeft, height, _gradientColors, null, Shader.TileMode.CLAMP);
+            _waterfallPaint.setShader(linearGradient);
+            _waterfallCanvas.drawRect(0, 0, _marginLeft, height, _waterfallPaint);
+            _waterfallPaint = null;
+        }
 
+        if (_data == null || _data.length == 0 || _startIndex >= _endIndex) {
+            return;
+        }
+
+        if (_waterfallPaint == null) {
+            _waterfallPaint = new Paint();
+        }
+
+        int w = _waterfallBmp.getWidth();
+        int h = _waterfallBmp.getHeight();
+        float perWidth = ((w - _marginLeft - _marginRight) / (float) (_endIndex - _startIndex));
+        float perHeight = h / (float) _rainRow;
+
+        byte[] indexArr = levelToColorIndex(_data);
+
+        if (_drawCount == 0) {
+            // 第一次绘制
+            for (int i = _startIndex; i < _endIndex; i++) {
+                int width = (int) ((i - _startIndex) * perWidth) + _marginLeft;
+                int height = 0;
+                _waterfallPaint.setColor(_gradientColors[_gradientColors.length - 1 - indexArr[i]]);
+                _waterfallCanvas.drawRect(width, height, width + perWidth, height + perHeight, _waterfallPaint);
+            }
+            _drawCount++;
+        } else {
+            if (_drawCount < _rainRow) {
+                Bitmap bitmap = Bitmap.createBitmap(_waterfallBmp, _marginLeft, 0, _width - _marginLeft, (int) (_drawCount * perHeight));
+                _waterfallCanvas.drawBitmap(bitmap, _marginLeft, 0, _waterfallPaint);
+                bitmap.recycle();
+                _drawCount++;
+            }
+
+            if (_drawCount >= _rainRow) {
+                _drawCount = _rainRow - 1;
+            }
+        }
+
+        for (int i = _startIndex; i < _endIndex; i++) {
+            int width = (int) ((i - _startIndex) * perWidth) + _marginLeft;
+            int height = (int) (_drawCount * perHeight);
+            _waterfallPaint.setColor(_gradientColors[_gradientColors.length - 1 - indexArr[i]]);
+            _waterfallCanvas.drawRect(width, height, width + perWidth, height + perHeight, _waterfallPaint);
+        }
 
     }
 
@@ -579,6 +651,25 @@ public class SpectrumWaterfallView extends View implements View.OnTouchListener,
      */
     private void drawSelectZone(Canvas canvas) {
 
+    }
+
+    private byte[] levelToColorIndex(float[] data) {
+        byte[] colors = new byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            byte index;
+            float value = data[i];
+            if (value <= _minValue) {
+                index = (byte) (_bRool ? 1 : 0);
+            } else if (value >= _maxValue) {
+                index = (byte) (_gradientColors.length - 1);
+            } else {
+                index = (byte) ((value - _minValue) / (_maxValue - _minValue) * (_gradientColors.length - 1));
+            }
+
+            colors[i] = index;
+        }
+
+        return colors;
     }
 
     /**

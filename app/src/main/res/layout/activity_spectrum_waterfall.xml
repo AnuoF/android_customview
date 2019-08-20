@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ActivitySpectrumWaterfall">
+    tools:context=".ActivityGeneralSpectrumChart">
 
     <LinearLayout
         android:background="#000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.an.view.SpectrumWaterfallView
+        <com.an.view.GeneralSpectrumChart
             android:id="@+id/spectrum_waterfall_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

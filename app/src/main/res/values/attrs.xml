@@ -135,7 +135,7 @@
         <attr name="gradientColors" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="SpectrumWaterfallView">
+    <declare-styleable name="GeneralSpectrumChart">
         <attr name="marginTop" format="integer" />
         <attr name="marginBottom" format="integer" />
         <attr name="marginLeft" format="integer" />
@@ -160,6 +160,7 @@
         </attr>
 
         <attr name="gradientColorIndex" format="integer" />
+        <attr name="rainRow" format="integer" />
 
     </declare-styleable>
 
