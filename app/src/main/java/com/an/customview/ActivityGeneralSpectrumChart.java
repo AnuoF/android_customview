@@ -2,13 +2,13 @@ package com.an.customview;
 
 import android.os.Bundle;
 
-import com.an.view.GeneralSpectrumChart;
+import com.an.view.GeneralSpectrumView;
 
 import java.util.Random;
 
 public class ActivityGeneralSpectrumChart extends BaseActivity {
 
-    private GeneralSpectrumChart _spectrumWaterfall_1;
+    private GeneralSpectrumView _spectrumWaterfall_1;
     private final Random rand = new Random();
 
     @Override
@@ -20,7 +20,7 @@ public class ActivityGeneralSpectrumChart extends BaseActivity {
     }
 
     private void initView() {
-        _spectrumWaterfall_1 = (GeneralSpectrumChart) findViewById(R.id.spectrum_waterfall_view);
+        _spectrumWaterfall_1 = (GeneralSpectrumView) findViewById(R.id.spectrum_waterfall_view);
         _runing = true;
 
         new Thread() {
@@ -32,7 +32,7 @@ public class ActivityGeneralSpectrumChart extends BaseActivity {
                     _spectrumWaterfall_1.setData(101.7, 20000, getSpectremData());
 
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(20);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

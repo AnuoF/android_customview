@@ -135,7 +135,7 @@
         <attr name="gradientColors" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="GeneralSpectrumChart">
+    <declare-styleable name="GeneralSpectrumView">
         <attr name="marginTop" format="integer" />
         <attr name="marginBottom" format="integer" />
         <attr name="marginLeft" format="integer" />

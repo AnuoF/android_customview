@@ -1,5 +1,5 @@
 /**
- * @Title: GeneralSpectrumChart.java
+ * @Title: GeneralSpectrumView.java
  * @Package: com.an.view
  * @Description: 频谱图和瀑布图的组合控件
  * @Author: AnuoF
@@ -29,14 +29,13 @@ import android.view.View;
 
 import com.an.customview.R;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * 频谱图和瀑布图的组合控件
  */
-public class GeneralSpectrumChart extends View implements View.OnTouchListener, OnDrawFinishedListener {
+public class GeneralSpectrumView extends View implements View.OnTouchListener, OnDrawFinishedListener {
 
     // View定义字段
     private int _marginTop;                   // 上边距
@@ -103,46 +102,46 @@ public class GeneralSpectrumChart extends View implements View.OnTouchListener, 
     private Canvas _spectrumCanvas;
 
 
-    public GeneralSpectrumChart(Context context, AttributeSet attrs, int defStyle) {
+    public GeneralSpectrumView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public GeneralSpectrumChart(Context context, AttributeSet attrs) {
+    public GeneralSpectrumView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public GeneralSpectrumChart(Context context) {
+    public GeneralSpectrumView(Context context) {
         super(context);
         initView();
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(R.styleable.GeneralSpectrumChart);
+        TypedArray typedArray = context.obtainStyledAttributes(R.styleable.GeneralSpectrumView);
         if (typedArray != null) {
-            _marginTop = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginTop, 5);
-            _marginBottom = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginBottom, 5);
-            _marginLeft = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginLeft, 50);
-            _marginRight = typedArray.getInt(R.styleable.GeneralSpectrumChart_marginRight, 5);
-            _gridColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_gridCount, Color.argb(200, 255, 255, 255));
-            _gridCount = typedArray.getInt(R.styleable.GeneralSpectrumChart_gridCount, 10);
-            _unitText = typedArray.getString(R.styleable.GeneralSpectrumChart_unitText);
-            _unitSize = typedArray.getInt(R.styleable.GeneralSpectrumChart_unitSize, 20);
-            _unitColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_unitColor, Color.WHITE);
-            _maxValue = typedArray.getInt(R.styleable.GeneralSpectrumChart_maxValue, 80);
-            _minValue = typedArray.getInt(R.styleable.GeneralSpectrumChart_minValue, -20);
-            _selectZoneColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_selectZoneColor, Color.argb(50, 255, 0, 0));
-            int mode = typedArray.getInt(R.styleable.GeneralSpectrumChart_showMode, 0);
+            _marginTop = typedArray.getInt(R.styleable.GeneralSpectrumView_marginTop, 5);
+            _marginBottom = typedArray.getInt(R.styleable.GeneralSpectrumView_marginBottom, 5);
+            _marginLeft = typedArray.getInt(R.styleable.GeneralSpectrumView_marginLeft, 50);
+            _marginRight = typedArray.getInt(R.styleable.GeneralSpectrumView_marginRight, 5);
+            _gridColor = typedArray.getColor(R.styleable.GeneralSpectrumView_gridCount, Color.argb(200, 255, 255, 255));
+            _gridCount = typedArray.getInt(R.styleable.GeneralSpectrumView_gridCount, 10);
+            _unitText = typedArray.getString(R.styleable.GeneralSpectrumView_unitText);
+            _unitSize = typedArray.getInt(R.styleable.GeneralSpectrumView_unitSize, 20);
+            _unitColor = typedArray.getColor(R.styleable.GeneralSpectrumView_unitColor, Color.WHITE);
+            _maxValue = typedArray.getInt(R.styleable.GeneralSpectrumView_maxValue, 80);
+            _minValue = typedArray.getInt(R.styleable.GeneralSpectrumView_minValue, -20);
+            _selectZoneColor = typedArray.getColor(R.styleable.GeneralSpectrumView_selectZoneColor, Color.argb(50, 255, 0, 0));
+            int mode = typedArray.getInt(R.styleable.GeneralSpectrumView_showMode, 0);
             _showMode = ShowMode.values()[mode];
-            int gradientColorIndex = typedArray.getInt(R.styleable.GeneralSpectrumChart_gradientColorIndex, 3);
+            int gradientColorIndex = typedArray.getInt(R.styleable.GeneralSpectrumView_gradientColorIndex, 3);
             initColorGradient(gradientColorIndex);
-            _realTimeLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_realTimeLineColor, Color.GREEN);
-            _maxValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_maxValueLineColor, Color.RED);
-            _minValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumChart_minValueLineColor, Color.BLUE);
-            _scaleFontSize = typedArray.getInt(R.styleable.GeneralSpectrumChart_scaleFontSize, 20);
-            _spectrumMarginBottom = typedArray.getInt(R.styleable.GeneralSpectrumChart_spectrumMarginBottom, 30);
-            _rainRow = typedArray.getInt(R.styleable.GeneralSpectrumChart_rainRow, 500);
+            _realTimeLineColor = typedArray.getColor(R.styleable.GeneralSpectrumView_realTimeLineColor, Color.GREEN);
+            _maxValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumView_maxValueLineColor, Color.RED);
+            _minValueLineColor = typedArray.getColor(R.styleable.GeneralSpectrumView_minValueLineColor, Color.BLUE);
+            _scaleFontSize = typedArray.getInt(R.styleable.GeneralSpectrumView_scaleFontSize, 20);
+            _spectrumMarginBottom = typedArray.getInt(R.styleable.GeneralSpectrumView_spectrumMarginBottom, 30);
+            _rainRow = typedArray.getInt(R.styleable.GeneralSpectrumView_rainRow, 500);
 
             _executorService = Executors.newFixedThreadPool(5);
             _scaleLineLength = 5;
@@ -620,20 +619,26 @@ public class GeneralSpectrumChart extends View implements View.OnTouchListener, 
             _drawCount++;
         } else {
             if (_drawCount < _rainRow) {
-                Bitmap bitmap = Bitmap.createBitmap(_waterfallBmp, _marginLeft, 0, _width - _marginLeft, (int) (_drawCount * perHeight));
+                // 还未画满，则裁剪之前的所有图像
+                Bitmap bitmap = Bitmap.createBitmap(_waterfallBmp, _marginLeft, 0, w - _marginLeft, (int) (_drawCount * perHeight));
                 _waterfallCanvas.drawBitmap(bitmap, _marginLeft, 0, _waterfallPaint);
                 bitmap.recycle();
-                _drawCount++;
+            } else if (_drawCount == _rainRow) {
+                // 如果已画满，则裁剪之前 1到n 高的图像
+                Bitmap bitmap = Bitmap.createBitmap(_waterfallBmp, _marginLeft, (int) perHeight, w - _marginLeft, (int) ((_drawCount - 1) * perHeight));
+                _waterfallCanvas.drawBitmap(bitmap, _marginLeft, 0, _waterfallPaint);
+                bitmap.recycle();
             }
+            _drawCount++;
 
             if (_drawCount >= _rainRow) {
-                _drawCount = _rainRow - 1;
+                _drawCount = _rainRow;
             }
         }
 
         for (int i = _startIndex; i < _endIndex; i++) {
             int width = (int) ((i - _startIndex) * perWidth) + _marginLeft;
-            int height = (int) (_drawCount * perHeight);
+            int height = (int) ((_drawCount -1) * perHeight);
             _waterfallPaint.setColor(_gradientColors[_gradientColors.length - 1 - indexArr[i]]);
             _waterfallCanvas.drawRect(width, height, width + perWidth, height + perHeight, _waterfallPaint);
         }
@@ -653,6 +658,12 @@ public class GeneralSpectrumChart extends View implements View.OnTouchListener, 
 
     }
 
+    /**
+     * 频谱幅度值到颜色的映射
+     *
+     * @param data
+     * @return
+     */
     private byte[] levelToColorIndex(float[] data) {
         byte[] colors = new byte[data.length];
         for (int i = 0; i < data.length; i++) {

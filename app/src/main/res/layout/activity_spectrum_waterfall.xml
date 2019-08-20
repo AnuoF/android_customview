@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.an.view.GeneralSpectrumChart
+        <com.an.view.GeneralSpectrumView
             android:id="@+id/spectrum_waterfall_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
