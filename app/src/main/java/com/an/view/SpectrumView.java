@@ -59,6 +59,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
     private double _frequency;             // 中心频率
     private double _spectrumSpan;          // 频谱带宽
     private float[] _data;                 // 频谱数据
+    private float[] _maxData;              // 最大值
+    private float[] _minData;              // 最小值
 
     private int _startIndex;               // 提取数据的起始位置
     private int _endIndex;                 // 提取数据的终止位置
@@ -89,6 +91,69 @@ public class SpectrumView extends View implements View.OnTouchListener {
         initView();
     }
 
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpectrumView);
+        if (typedArray != null) {
+            _unitFontSize = typedArray.getInt(R.styleable.SpectrumView_unit_font_size, 20);
+            _unitStr = typedArray.getString(R.styleable.SpectrumView_unit_sv);
+            _unitColor = typedArray.getColor(R.styleable.SpectrumView_unit_color_sv, Color.argb(200, 0, 255, 0));
+            _gridColor = typedArray.getColor(R.styleable.SpectrumView_grid_color_sv, Color.argb(200, 255, 251, 240));
+            _gridCount = typedArray.getInt(R.styleable.SpectrumView_grid_count_sv, 10);
+            _realTimeLineColor = typedArray.getColor(R.styleable.SpectrumView_realtime_line_color_sv, Color.GREEN);
+            _maxValueLineColor = typedArray.getColor(R.styleable.SpectrumView_max_value_line_color_sv, Color.RED);
+            _minValueLineColor = typedArray.getColor(R.styleable.SpectrumView_min_value_line_color_sv, Color.BLUE);
+            _marginTop = typedArray.getInt(R.styleable.SpectrumView_margin_top_sv, 10);
+            _marginBottom = typedArray.getInt(R.styleable.SpectrumView_margin_bottom_sv, 30);
+            _marginLeft = typedArray.getInt(R.styleable.SpectrumView_margin_left_sv, 50);
+            _marginRight = typedArray.getInt(R.styleable.SpectrumView_margin_right_sv, 10);
+            _scaleFontSize = typedArray.getInt(R.styleable.SpectrumView_scale_font_size_sv, 20);
+            _selectRectColor = typedArray.getColor(R.styleable.SpectrumView_select_rect_color_sv, Color.argb(100, 255, 0, 0));
+
+            _paint = new Paint();
+            _maxValue = 80;
+            _minValue = -20;
+            _scaleLineLength = 10;
+            _frequency = 101.7;
+            _spectrumSpan = 20;
+            setOnTouchListener(this);
+            _handleType = HandleType.NONE;
+            _data = new float[0];
+            _maxData = new float[0];
+            _minData = new float[0];
+        } else {
+            initView();
+        }
+    }
+
+    private void initView() {
+        _unitFontSize = 20;
+        _unitStr = "";
+        _unitColor = Color.argb(200, 0, 255, 0);
+        _gridColor = Color.argb(200, 255, 251, 240);
+        _gridCount = 10;
+        _realTimeLineColor = Color.GREEN;
+        _maxValueLineColor = Color.RED;
+        _minValueLineColor = Color.BLUE;
+        _marginTop = 10;
+        _marginBottom = 30;
+        _marginLeft = 10;
+        _marginRight = 10;
+        _scaleFontSize = 20;
+        _selectRectColor = Color.argb(100, 255, 0, 0);
+
+        _paint = new Paint();
+        _maxValue = 80;
+        _minValue = -20;
+        _scaleLineLength = 10;
+        _frequency = 101.7;
+        _spectrumSpan = 20;
+        setOnTouchListener(this);
+        _handleType = HandleType.NONE;
+        _data = new float[0];
+        _maxData = new float[0];
+        _minData = new float[0];
+    }
+
     /**
      * 设置数据
      *
@@ -100,6 +165,22 @@ public class SpectrumView extends View implements View.OnTouchListener {
         if (frequency != _frequency || spectrunSpan != _spectrumSpan) {
             _startIndex = 0;
             _endIndex = data.length;
+        }
+
+        if (_minData.length != data.length) {
+            _minData = new float[data.length];
+            _maxData = new float[data.length];
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            float level = data[i];
+            if (level < _minData[i]) {
+                _minData[i] = level;
+            }
+
+            if (level > _maxData[i]) {
+                _maxData[i] = level;
+            }
         }
 
         _frequency = frequency;
@@ -235,65 +316,6 @@ public class SpectrumView extends View implements View.OnTouchListener {
         return true;
     }
 
-    private void initView(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpectrumView);
-        if (typedArray != null) {
-            _unitFontSize = typedArray.getInt(R.styleable.SpectrumView_unit_font_size, 20);
-            _unitStr = typedArray.getString(R.styleable.SpectrumView_unit_sv);
-            _unitColor = typedArray.getColor(R.styleable.SpectrumView_unit_color_sv, Color.argb(200, 0, 255, 0));
-            _gridColor = typedArray.getColor(R.styleable.SpectrumView_grid_color_sv, Color.argb(200, 255, 251, 240));
-            _gridCount = typedArray.getInt(R.styleable.SpectrumView_grid_count_sv, 10);
-            _realTimeLineColor = typedArray.getColor(R.styleable.SpectrumView_realtime_line_color_sv, Color.GREEN);
-            _maxValueLineColor = typedArray.getColor(R.styleable.SpectrumView_max_value_line_color_sv, Color.RED);
-            _minValueLineColor = typedArray.getColor(R.styleable.SpectrumView_min_value_line_color_sv, Color.BLUE);
-            _marginTop = typedArray.getInt(R.styleable.SpectrumView_margin_top_sv, 10);
-            _marginBottom = typedArray.getInt(R.styleable.SpectrumView_margin_bottom_sv, 30);
-            _marginLeft = typedArray.getInt(R.styleable.SpectrumView_margin_left_sv, 50);
-            _marginRight = typedArray.getInt(R.styleable.SpectrumView_margin_right_sv, 10);
-            _scaleFontSize = typedArray.getInt(R.styleable.SpectrumView_scale_font_size_sv, 20);
-            _selectRectColor = typedArray.getColor(R.styleable.SpectrumView_select_rect_color_sv, Color.argb(100, 255, 0, 0));
-
-            _paint = new Paint();
-            _maxValue = 80;
-            _minValue = -20;
-            _scaleLineLength = 10;
-            _frequency = 101.7;
-            _spectrumSpan = 20;
-            setOnTouchListener(this);
-            _handleType = HandleType.NONE;
-            _data = new float[0];
-        } else {
-            initView();
-        }
-    }
-
-    private void initView() {
-        _unitFontSize = 20;
-        _unitStr = "";
-        _unitColor = Color.argb(200, 0, 255, 0);
-        _gridColor = Color.argb(200, 255, 251, 240);
-        _gridCount = 10;
-        _realTimeLineColor = Color.GREEN;
-        _maxValueLineColor = Color.RED;
-        _minValueLineColor = Color.BLUE;
-        _marginTop = 10;
-        _marginBottom = 30;
-        _marginLeft = 10;
-        _marginRight = 10;
-        _scaleFontSize = 20;
-        _selectRectColor = Color.argb(100, 255, 0, 0);
-
-        _paint = new Paint();
-        _maxValue = 80;
-        _minValue = -20;
-        _scaleLineLength = 10;
-        _frequency = 101.7;
-        _spectrumSpan = 20;
-        setOnTouchListener(this);
-        _handleType = HandleType.NONE;
-        _data = new float[0];
-    }
-
     /**
      * 画单位
      *
@@ -394,6 +416,8 @@ public class SpectrumView extends View implements View.OnTouchListener {
         float perWidth = scaleWidth / (float) (_endIndex - _startIndex);
 
         Path realTimePath = new Path();
+        Path maxValuePath = null;
+        Path minValuePath = null;
 
         for (int i = _startIndex; i <= _endIndex; i++) {    // 此处需要加上=，确保最后一个点可以绘制
             if (i >= _data.length)  // 防止越界
@@ -408,9 +432,49 @@ public class SpectrumView extends View implements View.OnTouchListener {
             } else {
                 realTimePath.lineTo(x, y);
             }
+
+            if (_drawMaxValue) {
+                if (maxValuePath == null) {
+                    maxValuePath = new Path();
+                }
+
+                float maxLevel = _maxData[i];
+                int max_x = (int) ((i - _startIndex) * perWidth) + _marginLeft + _scaleLineLength;
+                int max_y = (int) ((maxValue - maxLevel) * perHeight) + _marginTop;
+
+                if (i == _startIndex) {
+                    maxValuePath.moveTo(max_x, max_y);
+                } else {
+                    maxValuePath.lineTo(max_x, max_y);
+                }
+            }
+
+            if (_drawMinValue) {
+                if (minValuePath == null) {
+                    minValuePath = new Path();
+                }
+
+                float minLevel = _minData[i];
+                int min_x = (int) ((i - _startIndex) * perWidth) + _marginLeft + _scaleLineLength;
+                int min_y = (int) ((maxValue - minLevel) * perHeight) + _marginTop;
+
+                if (i == _startIndex) {
+                    minValuePath.moveTo(min_x, min_y);
+                } else {
+                    minValuePath.lineTo(min_x, min_y);
+                }
+            }
         }
 
         canvas.drawPath(realTimePath, _paint);
+        if (maxValuePath != null) {
+            _paint.setColor(_maxValueLineColor);
+            canvas.drawPath(maxValuePath, _paint);    // 画最大值
+        }
+        if (minValuePath != null) {
+            _paint.setColor(_minValueLineColor);
+            canvas.drawPath(minValuePath, _paint);    // 画最小值
+        }
 
         // 覆盖上边和下边，使频谱看上去是在指定区域进行绘制的
         _paint.setStyle(Paint.Style.FILL);

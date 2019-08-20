@@ -6,26 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ActivitySpectrumView">
-    
-    <com.an.view.SpectrumView
-        app:unit_sv="电平（dBμV）"
-        app:unit_color_sv="#E91E63"
-        app:grid_color_sv="#46743B"
-        app:realtime_line_color_sv="#FCF9F9"
 
-        android:background="#0C0C0C"
+    <com.an.view.SpectrumView
         android:id="@+id/spectrum_view_1"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:background="#0C0C0C"
+
+        app:grid_color_sv="#46743B"
+        app:realtime_line_color_sv="#FCF9F9"
+        app:unit_color_sv="#E91E63"
+        app:unit_sv="电平（dBμV）" />
 
     <com.an.view.SpectrumView
-        app:unit_sv="电平（dBμV）"
-
-        android:background="#252222"
-        android:layout_marginTop="5dp"
         android:id="@+id/spectrum_view_2"
         android:layout_width="match_parent"
-        android:layout_height="350dp" />
+        android:layout_height="350dp"
+
+        android:layout_marginTop="5dp"
+        android:background="#252222"
+        app:max_value_line_color_sv="#F70707"
+        app:min_value_line_color_sv="#0B4AEB"
+        app:unit_sv="电平（dBμV）" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,40 +35,59 @@
 
         <Button
             android:id="@+id/btn_zoom_in_sv"
-            android:text="放大"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="放大" />
 
         <Button
             android:id="@+id/btn_zoom_out_sv"
-            android:text="缩小"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="缩小" />
 
         <Button
             android:id="@+id/btn_offset_up_sv"
-            android:text="上移"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="上移" />
 
         <Button
             android:id="@+id/btn_offset_down_sv"
-            android:text="下移"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="下移" />
 
         <Button
             android:id="@+id/btn_auto_sv"
-            android:text="自动"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="自动" />
 
         <Button
             android:id="@+id/btn_clear_sv"
-            android:text="清空"
             android:layout_width="55dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:text="清空" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/cb_max"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:checked="true"
+            android:text="最大值" />
+
+        <CheckBox
+            android:id="@+id/cb_min"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:checked="true"
+            android:text="最小值" />
     </LinearLayout>
 
 </LinearLayout>

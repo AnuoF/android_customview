@@ -3,6 +3,8 @@ package com.an.customview;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.an.view.SpectrumView;
 
@@ -12,7 +14,7 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
 
     private SpectrumView _spectrumView1;
     private SpectrumView _spectrumView2;
-    private  final Random rand = new Random();
+    private final Random rand = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,8 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
     private void initView() {
         _spectrumView1 = (SpectrumView) findViewById(R.id.spectrum_view_1);
         _spectrumView2 = (SpectrumView) findViewById(R.id.spectrum_view_2);
+        _spectrumView2.setMaxValueLineVisible(true);
+        _spectrumView2.setMinValueLineVisible(true);
 
         Button btnZoomInY = (Button) findViewById(R.id.btn_zoom_in_sv);
         Button btnZoomOutY = (Button) findViewById(R.id.btn_zoom_out_sv);
@@ -32,6 +36,8 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
         Button btnOffsetDown = (Button) findViewById(R.id.btn_offset_down_sv);
         Button btnClear = (Button) findViewById(R.id.btn_clear_sv);
         Button btnAuto = (Button) findViewById(R.id.btn_auto_sv);
+        CheckBox cbMax = (CheckBox) findViewById(R.id.cb_max);
+        CheckBox cbMin = (CheckBox) findViewById(R.id.cb_min);
 
         btnZoomInY.setOnClickListener(this);
         btnZoomOutY.setOnClickListener(this);
@@ -39,6 +45,19 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
         btnOffsetDown.setOnClickListener(this);
         btnClear.setOnClickListener(this);
         btnAuto.setOnClickListener(this);
+
+        cbMax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                _spectrumView2.setMaxValueLineVisible(b);
+            }
+        });
+        cbMin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                _spectrumView2.setMinValueLineVisible(b);
+            }
+        });
 
         _runing = true;
 
@@ -103,7 +122,7 @@ public class ActivitySpectrumView extends BaseActivity implements View.OnClickLi
 
         data[399] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
         data[400] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
-        data[401] =  27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+        data[401] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
 
         return data;
     }
