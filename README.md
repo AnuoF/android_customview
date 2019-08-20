@@ -1,6 +1,10 @@
 
 安卓自定义控件，有刻度条、指南针、进度条、电平流、频谱图、瀑布图，待添加....
 
+**Demo下载**
+
+[apk](https://github.com/AnuoF/android_customview/blob/master/app/build/outputs/apk/debug/app-debug.apk)
+
 ## ScaleBar ##
 
 刻度条控件，样式如下：
