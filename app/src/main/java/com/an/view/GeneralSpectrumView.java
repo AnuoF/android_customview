@@ -813,9 +813,10 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
                     return;
                 }
 
-                float perScaleLength = (_width - _marginLeft - _marginLeft) / (float) (_endIndex - _startIndex);   // 一格的距离
-                int tempEndIndex = _startIndex + (int) ((_endX - _marginLeft) / perScaleLength);
-                int tempStartIndex = _startIndex + (int) ((_startX - _marginLeft) / perScaleLength);
+                int scaleLineLength = _showMode == ShowMode.Waterfall ? 0 : _scaleLineLength;
+                float perScaleLength = (_width - _marginLeft - scaleLineLength - _marginRight) / (float) (_endIndex - _startIndex);   // 一格的距离
+                int tempEndIndex = _startIndex + (int) ((_endX - _marginLeft - scaleLineLength) / perScaleLength);
+                int tempStartIndex = _startIndex + (int) ((_startX - _marginLeft - scaleLineLength) / perScaleLength);
                 if (tempEndIndex > tempStartIndex) {  // 至少保证有2个点
                     _endIndex = tempEndIndex;
                     _startIndex = tempStartIndex;
