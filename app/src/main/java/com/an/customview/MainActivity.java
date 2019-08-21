@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, ActivityWaterfullView.class));
                 break;
             case R.id.btn_both_view:
-                startActivity(new Intent(this, ActivityGeneralSpectrumChart.class));
+                startActivity(new Intent(this, ActivityGeneralSpectrumView.class));
                 break;
 
             default:

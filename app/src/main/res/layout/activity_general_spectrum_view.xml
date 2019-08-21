@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ActivityGeneralSpectrumView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#000000">
+
+        <com.an.view.GeneralSpectrumView
+            android:id="@+id/spectrum_waterfall_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:unitText="电平（dBuV）" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rg_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbt_both"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Both" />
+
+            <RadioButton
+                android:id="@+id/rbt_spectrum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spectrum" />
+
+            <RadioButton
+                android:id="@+id/rbt_waterfall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waterfall" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/cb_max_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="最大值" />
+
+            <CheckBox
+                android:id="@+id/cb_min_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="最小值" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

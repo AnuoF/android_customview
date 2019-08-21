@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityGeneralSpectrumChart"
+            android:name=".ActivityGeneralSpectrumView"
             android:label="通用频谱图控件"></activity>
         <activity
             android:name=".ActivityWaterfullView"
