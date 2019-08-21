@@ -115,11 +115,11 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(R.styleable.GeneralSpectrumView);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.GeneralSpectrumView);
         if (typedArray != null) {
             _marginTop = typedArray.getInt(R.styleable.GeneralSpectrumView_marginTop, 5);
             _marginBottom = typedArray.getInt(R.styleable.GeneralSpectrumView_marginBottom, 5);
-            _marginLeft = typedArray.getInt(R.styleable.GeneralSpectrumView_marginLeft, 50);
+            _marginLeft = typedArray.getInt(R.styleable.GeneralSpectrumView_marginLeft, 60);
             _marginRight = typedArray.getInt(R.styleable.GeneralSpectrumView_marginRight, 5);
             _gridColor = typedArray.getColor(R.styleable.GeneralSpectrumView_gridCount, Color.argb(200, 255, 255, 255));
             _gridCount = typedArray.getInt(R.styleable.GeneralSpectrumView_gridCount, 10);
@@ -415,6 +415,7 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
         // 画单位
         int w = _spectrumBmp.getWidth();
         int h = _spectrumBmp.getHeight();
+
         if (_unitText != null && _unitText.length() > 0) {
             _spectrumCanvas.rotate(-90);
             _spectrumCanvas.translate(-h, 0);
@@ -425,7 +426,7 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
             _spectrumPaint.getTextBounds(_unitText, 0, _unitText.length(), unitRect);
             _spectrumCanvas.drawText(_unitText, h / 2 - (int) (unitRect.width() / 2), unitRect.height(), _spectrumPaint);
             _spectrumCanvas.save();
-            _spectrumCanvas.translate(-h, 0);
+            _spectrumCanvas.translate(h, 0);
             _spectrumCanvas.rotate(90);
         }
 
