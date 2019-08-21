@@ -73,9 +73,17 @@ public class ActivityGeneralSpectrumView extends BaseActivity implements RadioGr
             data[i] = (rand.nextInt(50 - (-150) + 1) + (-150)) / 10;
         }
 
+        data[199] = 17 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+        data[200] = 27 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
+        data[201] = 17 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+
         data[399] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
         data[400] = 47 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
         data[401] = 27 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+
+        data[599] = 17 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
+        data[600] = 27 + (rand.nextInt(10 - (-10) + 1) + (-10)) / 10;
+        data[601] = 17 + (rand.nextInt(25 - (-25) + 1) + (-25)) / 10;
 
         return data;
     }
