@@ -161,7 +161,11 @@
 
         <attr name="gradientColorIndex" format="integer" />
         <attr name="rainRow" format="integer" />
-
     </declare-styleable>
+    
+    <declare-styleable name="DF">
+    </declare-styleable>
+
+
 
 </resources>
