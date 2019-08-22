@@ -1,13 +1,15 @@
 
 安卓自定义控件，有电平流、频谱图、瀑布图、刻度条、指南针、进度条，待添加....
 
-## ScaleBar ##
+## LevelStremView ##
 
 电平流控件，样式如下：
 
 ![](https://i.imgur.com/UnHQy0I.png)
 
 ![](https://i.imgur.com/TsYjyyB.gif)
+
+## SpectrumView WaterfallView ##
 
 频谱图控件，样式如下：
 
@@ -20,6 +22,8 @@
 通用频谱图控件（频谱图与瀑布图的组合）
 
 ![](https://i.imgur.com/jySDEka.png)
+
+## ScaleBar ##
 
 刻度条控件，样式如下：
 
