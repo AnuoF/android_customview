@@ -1,6 +1,6 @@
 打包步骤
 
-1) build.gradle     library
+1) build.gradle     library       //        applicationId "com.an.customview"
 
 2) MainActivity ActivityLevelStreamView
 

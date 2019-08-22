@@ -12,6 +12,8 @@ package com.an.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -35,10 +37,10 @@ public class CompassView extends View {
     private Paint _circlePaint;
     private Paint _centerCirclePaint;
 
-    private final String _northString = "N";
-    private final String _eastString = "E";
-    private final String _southString = "S";
-    private final String _westString = "W";
+    private final String _northString = "360";
+    private final String _eastString = "90";
+    private final String _southString = "180";
+    private final String _westString = "270";
 
     private float _angle;      // 度，在绘制时需要转成 弧度
     private float _angleOut;
@@ -217,32 +219,34 @@ public class CompassView extends View {
             canvas.save();
             canvas.translate(0, _textHeight);
 
-            // 绘制基本方位
-            if (i % 6 == 0) {
-                String dirString = "";
-                switch (i) {
-                    case 0:
-                        dirString = _northString;
-                        int arrowY = 2 * _textHeight;
-                        canvas.drawLine(_px, arrowY, _px - 5, 3 * _textHeight, _markerPaint);
-                        canvas.drawLine(_px, arrowY, _px + 5, 3 * _textHeight, _markerPaint);
-                        canvas.drawLine(_px - 5, 3 * _textHeight, _px + 5, 3 * _textHeight, _markerPaint);
-                        break;
-                    case 6:
-                        dirString = _eastString;
-                        break;
-                    case 12:
-                        dirString = _southString;
-                        break;
-                    case 18:
-                        dirString = _westString;
-                        break;
-                    default:
-                        dirString = _westString;
-                        break;
-                }
-                canvas.drawText(dirString, cadinalX, cadinalY, _textPaint);
-            } else if (i % 3 == 0) {
+//            // 绘制基本方位
+//            if (i % 6 == 0) {
+//                String dirString = "";
+//                switch (i) {
+//                    case 0:
+//                        dirString = _northString;
+//                        int arrowY = 2 * _textHeight;
+//                        canvas.drawLine(_px, arrowY, _px - 5, 3 * _textHeight, _markerPaint);
+//                        canvas.drawLine(_px, arrowY, _px + 5, 3 * _textHeight, _markerPaint);
+//                        canvas.drawLine(_px - 5, 3 * _textHeight, _px + 5, 3 * _textHeight, _markerPaint);
+//                        break;
+//                    case 6:
+//                        dirString = _eastString;
+//                        break;
+//                    case 12:
+//                        dirString = _southString;
+//                        break;
+//                    case 18:
+//                        dirString = _westString;
+//                        break;
+//                    default:
+//                        dirString = _westString;
+//                        break;
+//                }
+//                canvas.drawText(dirString, cadinalX - _textPaint.measureText(dirString) / 2, cadinalY, _textPaint);
+//            } else if (i % 3 == 0) {
+
+            if (i % 3 == 0) {
                 // 每个45度绘制文本
                 String angle = String.valueOf(i * 15);
                 float angleTextWidth = _textPaint.measureText(angle);
@@ -262,7 +266,7 @@ public class CompassView extends View {
      * @param canvas
      */
     private void drawCenterCircleAndDirectionLine(Canvas canvas) {
-        canvas.drawCircle(_px, _py, _radius / 20, _centerCirclePaint);
+//        canvas.drawCircle(_px, _py, _radius / 20, _centerCirclePaint);
 
         int centerRadius = _radius / 5 * 4;
         double x = _px;
@@ -312,5 +316,9 @@ public class CompassView extends View {
         _centerCirclePaint.setStrokeWidth(6f);
         canvas.drawLine((float) _px, (float) _py, (float) x, (float) y, _centerCirclePaint);
         canvas.restore();
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+        canvas.drawBitmap(bitmap, _px - bitmap.getWidth() / 2, _py - bitmap.getHeight() / 2, _centerCirclePaint);
+        bitmap.recycle();
     }
 }
