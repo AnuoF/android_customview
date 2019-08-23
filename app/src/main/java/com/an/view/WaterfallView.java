@@ -251,11 +251,11 @@ public class WaterfallView extends View implements View.OnTouchListener, OnDrawF
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if (_bitmap != null) {
-            _wCanvas = null;
-            _bitmap.recycle();
-            _bitmap = null;
-        }
+//        if (_bitmap != null) {
+//            _wCanvas = null;
+//            _bitmap.recycle();
+//            _bitmap = null;
+//        }
     }
 
     @Override
