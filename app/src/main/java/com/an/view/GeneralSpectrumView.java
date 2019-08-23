@@ -85,18 +85,22 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
     private int _endIndex;                    // 提取数据的终止位置（用于数据缩放）
 
     private HandleType _handelType;           // 手势处理类型
-    private float _startY;                      // 单点触控时的起始点 Y，频谱图Y轴拖动时用
+    private float _startY;                    // 单点触控时的起始点 Y，频谱图Y轴拖动时用
     private float _startX;                    // 单点触控时的起始点 X，频谱缩放时用
-    private float _endX;                        // 最后点 X， X 轴放大缩小用
+    private float _endX;                      // 最后点 X， X 轴放大缩小用
     private int _offsetY;                     // 单点拖动时的Y轴偏移
     private float _oldDistanceY;              // 多点触控时，最初的距离，用于频谱纵向缩放
     private int _zoomOffsetY;                 // 控制Y轴缩放
 
-    private ExecutorService _executorService;      // 线程池服务，开启线程来进行图形绘制，避免占用主线程
-    private Bitmap _waterfallBmp;             // 瀑布图，不含渐变色带
-    private Canvas _waterfallCanvas;
-    private Bitmap _spectrumBmp;
-    private Canvas _spectrumCanvas;
+    private ExecutorService _executorService;       // 线程池服务，开启线程来进行图形绘制，避免占用主线程
+    private Bitmap _waterfallBmp;                   // 瀑布图，不含渐变色带
+    private Canvas _waterfallCanvas;                // 瀑布图画布
+    private Bitmap _spectrumBmp;                    // 频谱图
+    private Canvas _spectrumCanvas;                 // 频谱图画布
+
+    private Bitmap _showBmp;                   // 显示到频谱的图像
+    private Canvas _showCanvas;
+    private static final Object _lockObj = new Object();
 
 
     public GeneralSpectrumView(Context context, AttributeSet attrs, int defStyle) {
@@ -291,25 +295,11 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
 
     @Override
     protected void onDraw(Canvas canvas) {
-        switch (_showMode) {
-            case Both:
-                if (_spectrumBmp != null) {
-                    canvas.drawBitmap(_spectrumBmp, 0, 0, _paint);
-                }
-                if (_waterfallBmp != null) {
-                    canvas.drawBitmap(_waterfallBmp, 0, _height / 2, _paint);
-                }
-                break;
-            case Spectrum:
-                if (_spectrumBmp != null) {
-                    canvas.drawBitmap(_spectrumBmp, 0, 0, _paint);
-                }
-                break;
-            case Waterfall:
-                if (_waterfallBmp != null) {
-                    canvas.drawBitmap(_waterfallBmp, 0, 0, _paint);
-                }
-                break;
+
+        synchronized (_lockObj) {
+            if (_showBmp != null) {
+                canvas.drawBitmap(_showBmp, 0, 0, _paint);
+            }
         }
 
         drawSelectZone(canvas);
@@ -349,7 +339,39 @@ public class GeneralSpectrumView extends View implements View.OnTouchListener, O
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                draw(newBmp, listener);
+                synchronized (_lockObj) {
+
+                    draw(newBmp, listener);
+
+                    if (_showBmp == null) {
+                        _showBmp = Bitmap.createBitmap(_width, _height, Bitmap.Config.ARGB_8888);
+                        _showCanvas = new Canvas(_showBmp);
+                    } else {
+                        _showCanvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);    // 清空画布
+                    }
+
+                    switch (_showMode) {
+                        case Both:
+                            if (_spectrumBmp != null) {
+                                _showCanvas.drawBitmap(_spectrumBmp, 0, 0, _paint);
+                            }
+                            if (_waterfallBmp != null) {
+                                _showCanvas.drawBitmap(_waterfallBmp, 0, _height / 2, _paint);
+                            }
+                            break;
+                        case Spectrum:
+                            if (_spectrumBmp != null) {
+                                _showCanvas.drawBitmap(_spectrumBmp, 0, 0, _paint);
+                            }
+                            break;
+                        case Waterfall:
+                            if (_waterfallBmp != null) {
+                                _showCanvas.drawBitmap(_waterfallBmp, 0, 0, _paint);
+                            }
+                            break;
+                    }
+                }
+
                 postInvalidate();
             }
         });

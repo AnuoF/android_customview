@@ -57,7 +57,7 @@ public class ActivityGeneralSpectrumView extends BaseActivity implements RadioGr
                     _spectrumWaterfall_1.setData(101.7, 20000, getSpectrumData());
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
