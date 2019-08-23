@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnWaterfallView.setOnClickListener(this);
         Button btnBothView = (Button) findViewById(R.id.btn_both_view);
         btnBothView.setOnClickListener(this);
+        Button btnCompassDf = (Button) findViewById(R.id.btn_compass_df);
+        btnCompassDf.setOnClickListener(this);
     }
 
     @Override
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_both_view:
                 startActivity(new Intent(this, ActivityGeneralSpectrumView.class));
+                break;
+            case R.id.btn_compass_df:
+                startActivity(new Intent(this, ActivityDF.class));
                 break;
 
             default:
