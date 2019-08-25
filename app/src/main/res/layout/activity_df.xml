@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ActivityDF">
+    tools:context=".ActivityDFCompassView">
 
-    <com.an.view.DF
-        android:id="@+id/df_view"
+    <com.an.view.DFCompassView
+        android:id="@+id/df_view1"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#6D5172" />
 
-    <com.an.view.DF
+    <com.an.view.DFCompassView
+        android:id="@+id/df_view2"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

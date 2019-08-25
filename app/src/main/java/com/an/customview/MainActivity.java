@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, ActivityGeneralSpectrumView.class));
                 break;
             case R.id.btn_compass_df:
-                startActivity(new Intent(this, ActivityDF.class));
+                startActivity(new Intent(this, ActivityDFCompassView.class));
                 break;
 
             default:

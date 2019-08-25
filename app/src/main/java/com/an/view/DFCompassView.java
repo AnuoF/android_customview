@@ -1,3 +1,13 @@
+/**
+ * @Title: DFCompassView.java
+ * @Package: com.an.view
+ * @Description: 自定义侧向罗盘控件
+ * @Author: AnuoF
+ * @QQ/WeChat: 188512936
+ * @Date 2019.08.24 08:27
+ * @Version V1.0
+ */
+
 package com.an.view;
 
 import android.content.Context;
@@ -6,14 +16,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.CollapsibleActionView;
-import android.view.TextureView;
 import android.view.View;
 
 import androidx.annotation.RequiresApi;
@@ -25,13 +34,15 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DF extends View {
+/**
+ * 自定义侧向罗盘控件
+ */
+public class DFCompassView extends View {
     private int _neswColor;                       // NESW颜色
     private int _neswSize;                        // NESW字体大小
     private ViewMode _viewMode;                   // 视图模式
     private NorthMode _nothMode;                  // 正北示向度
     private int _crossLineColor;                  // 十字交叉线条颜色
-    private int _gridCount;                       // 几等分
     private int _minScaleLineLength;              // 短刻度线长度
     private int _maxScaleLineLength;               // 长刻度线的长度
     private int _dataSize;                         // 数据长度 缓存多少个点
@@ -53,12 +64,12 @@ public class DF extends View {
     private ExecutorService _executorService;
 
 
-    public DF(Context context, AttributeSet attrs, int defStyle) {
+    public DFCompassView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
 
-    public DF(Context context, AttributeSet attrs) {
+    public DFCompassView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
@@ -73,13 +84,12 @@ public class DF extends View {
         _maxScaleLineLength = 20;
         _dataSize = 10;
         _scaleLineColor = Color.GREEN;
-        _scaleCircleColor = Color.BLUE;
+        _scaleCircleColor = Color.argb(200, 15, 187, 249);
 
         _initFinished = false;
         _paint = new Paint();
         _mPaint = new Paint();
         _executorService = Executors.newFixedThreadPool(1);
-
     }
 
     @Override
@@ -130,6 +140,22 @@ public class DF extends View {
                 }
             }
         });
+    }
+
+    public void setViewMode(ViewMode viewMode) {
+        if (_viewMode == viewMode)
+            return;
+
+        _viewMode = viewMode;
+        postInvalidate();
+    }
+
+    public void setNorthMode(NorthMode northMode) {
+        if (_nothMode == northMode)
+            return;
+
+        _nothMode = northMode;
+        postInvalidate();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -219,7 +245,7 @@ public class DF extends View {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void drawOutsideCircle(Canvas canvas) {
         float angle = 0;
-        if (_nothMode == NorthMode.CAR_HEAD || _dataList.size() != 0) {
+        if (_nothMode == NorthMode.CAR_HEAD && _dataList.size() > 0) {
             angle = _dataList.get(_dataList.size() - 1)[2];
         }
 
@@ -230,7 +256,6 @@ public class DF extends View {
         int maxR = r / 5 * 4;
 
         canvas.translate(px, py);
-
         canvas.rotate(angle);
 
         _mPaint.setColor(Color.RED);
@@ -246,6 +271,7 @@ public class DF extends View {
         int size = Math.max(neswRect.height(), neswRect.width());
 
         _mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        _mPaint.setColor(_crossLineColor);
         canvas.drawText("N", 0 - neswRect.width() / 2, -r + size, _mPaint);
         canvas.drawText("E", r - size, 0 + neswRect.height() / 2, _mPaint);
         canvas.drawText("S", -neswRect.width() / 2, r, _mPaint);
@@ -257,24 +283,64 @@ public class DF extends View {
         canvas.save();
         canvas.restore();
         canvas.rotate(-angle);
-
         canvas.translate(-px, -py);
     }
 
     /**
      * 画示向线
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void drawAzimuthLine(Canvas canvas) {
         if (_dataList.size() <= 0)
             return;
 
+        int px = _width / 2;
+        int py = _height / 2;     // 中心点（原点）   画图均以中心点作为参考
+        int r = Math.min(_width, _height) / 2;    // 半径，取较小的值
+        int minR = r / 5 * 3;
+        int maxR = r / 5 * 4;
+        canvas.translate(px, py);
+
         for (int i = 0; i < _dataList.size(); i++) {
             float quality = _dataList.get(i)[1];
             float azimuth = _dataList.get(i)[0];
-
-
+            canvas.rotate(azimuth);
+            int len = (int) (minR * (quality / 100));
+            canvas.drawLine(0, 0, 0, -len, _mPaint);
+            canvas.rotate(-azimuth);
         }
 
+        MaxMinClass maxMin = new MaxMinClass();
+        getMaxMin(maxMin);
+
+        _mPaint.setStyle(Paint.Style.FILL);
+        _mPaint.setColor(Color.argb(100, 0, 255, 0));
+        canvas.drawArc(-minR, -minR, minR, minR, maxMin.getMin() - 90, maxMin.getMax() - maxMin.getMin(), true, _mPaint);  // 需要 -90
+
+        float optimalAzimuth = maxMin.getOptimalAzimuth();
+        float optimalQuality = maxMin.getOptimalQuality();
+
+        // 最优值
+        canvas.rotate(optimalAzimuth);
+        _mPaint.setColor(Color.RED);
+        _mPaint.setStrokeWidth(2);
+        canvas.drawLine(0, 0, 0, -minR * (optimalQuality / 100), _mPaint);
+        canvas.rotate(-optimalAzimuth);
+
+        // 实时值
+        float azimuth = _dataList.get(_dataList.size() - 1)[0];
+        // 实时值
+        canvas.rotate(azimuth);
+
+        Path path = new Path();
+        path.moveTo(0, -minR);
+        path.lineTo((maxR - minR) / 2,- maxR);
+        path.lineTo(-(maxR - minR) / 2, -maxR);
+        _mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawPath(path, _mPaint);
+
+        canvas.rotate(-azimuth);
+        canvas.translate(-px, -py);
     }
 
     /**
@@ -283,16 +349,97 @@ public class DF extends View {
     private void drawCar(Canvas canvas) {
         int px = _width / 2;
         int py = _height / 2;     // 中心点（原点）   画图均以中心点作为参考
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
-        canvas.drawBitmap(bitmap, px - bitmap.getWidth() / 2, py - bitmap.getHeight() / 2, _paint);
+
+        if (_nothMode == NorthMode.CAR_HEAD) {
+            canvas.drawBitmap(bitmap, px - bitmap.getWidth() / 2, py - bitmap.getHeight() / 2, _paint);
+        } else if (_dataList.size() > 0) {
+            float angle = _dataList.get(_dataList.size() - 1)[2];
+            canvas.translate(px, py);
+            canvas.rotate(angle);
+            canvas.drawBitmap(bitmap, 0 - bitmap.getWidth() / 2, 0 - bitmap.getHeight() / 2, _paint);
+            canvas.rotate(-angle);
+            canvas.translate(-px, -py);
+        }
+
         bitmap.recycle();
+    }
+
+    private void getMaxMin(MaxMinClass maxMin) {
+        float max = _dataList.get(0)[0];      // 最大值
+        float min = _dataList.get(0)[0];      // 最小值
+        float optimalQuality = _dataList.get(0)[1];  // 最优值的质量
+        float optimalAzimuth = _dataList.get(0)[0];
+
+        for (int i = 1; i < _dataList.size(); i++) {
+            float azimuth = _dataList.get(i)[0];
+            if (max < azimuth) {
+                max = azimuth;
+            }
+            if (min > azimuth) {
+                min = azimuth;
+            }
+            if (optimalQuality < _dataList.get(i)[1]) {
+                optimalQuality = _dataList.get(i)[1];
+                optimalAzimuth = _dataList.get(i)[0];
+            }
+        }
+
+        maxMin.setMax(max);
+        maxMin.setMin(min);
+        maxMin.setOptimalQuality(optimalQuality);
+        maxMin.set0ptimalAzimuth(optimalAzimuth);
+    }
+
+    private class MaxMinClass {
+        private float max;
+        private float min;
+        private float optimalAzimuth;    // 最优值的事示向度
+        private float optimalQuality;        // 最优值的质量
+
+        public MaxMinClass() {
+
+        }
+
+        public void setMax(float max) {
+            this.max = max;
+        }
+
+        public float getMax() {
+            return max;
+        }
+
+        public void setMin(float min) {
+            this.min = min;
+        }
+
+        public float getMin() {
+            return min;
+        }
+
+        public void set0ptimalAzimuth(float azimuth) {
+            this.optimalAzimuth = azimuth;
+        }
+
+        public float getOptimalAzimuth() {
+            return optimalAzimuth;
+        }
+
+        public void setOptimalQuality(float quality) {
+            optimalQuality = quality;
+        }
+
+        public float getOptimalQuality() {
+            return optimalQuality;
+        }
     }
 
 
     /**
      * 视图模式
      */
-    private enum ViewMode {
+    public enum ViewMode {
         COMPASS,    // 方位视图
         CLOCK       // 钟表视图
     }
@@ -300,7 +447,7 @@ public class DF extends View {
     /**
      * 正北模式
      */
-    private enum NorthMode {
+    public enum NorthMode {
         NORTH,      // 正北示向度
         CAR_HEAD    // 相对车头
     }

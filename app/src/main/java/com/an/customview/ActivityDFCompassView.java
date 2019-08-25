@@ -2,14 +2,15 @@ package com.an.customview;
 
 import android.os.Bundle;
 
-import com.an.view.DF;
+import com.an.view.DFCompassView;
 
 import java.util.Random;
 
-public class ActivityDF extends BaseActivity {
+public class ActivityDFCompassView extends BaseActivity {
 
     private final Random rand = new Random();
-    private DF _df;
+    private DFCompassView _dfCompassView1;
+    private DFCompassView _dfCompassView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,10 @@ public class ActivityDF extends BaseActivity {
 
     private void initView() {
         _runing = true;
-        _df = (DF) findViewById(R.id.df_view);
+        _dfCompassView1 = (DFCompassView) findViewById(R.id.df_view1);
+        _dfCompassView2 = (DFCompassView) findViewById(R.id.df_view2);
+        _dfCompassView2.setNorthMode(DFCompassView.NorthMode.CAR_HEAD);
+        _dfCompassView2.setViewMode(DFCompassView.ViewMode.COMPASS);
 
         new Thread() {
             @Override
@@ -37,7 +41,8 @@ public class ActivityDF extends BaseActivity {
                         angle = 0;
                     }
 
-                    _df.setData(azimuth, quality, angle);
+                    _dfCompassView1.setData(azimuth, quality, angle);
+                    _dfCompassView2.setData(azimuth, quality, angle);
 
                     try {
                         Thread.sleep(1000);

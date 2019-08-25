@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityDF"
+            android:name=".ActivityDFCompassView"
             android:label="测向罗盘"></activity>
         <activity
             android:name=".ActivityGeneralSpectrumView"
