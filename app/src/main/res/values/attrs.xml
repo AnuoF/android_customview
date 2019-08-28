@@ -162,10 +162,15 @@
         <attr name="gradientColorIndex" format="integer" />
         <attr name="rainRow" format="integer" />
     </declare-styleable>
-    
-    <declare-styleable name="DFCompassView">
-    </declare-styleable>
 
+    <declare-styleable name="DFCompassView"></declare-styleable>
+
+    <declare-styleable name="CircleProcessBar">
+        <attr name="fillColor_CPB" format="color" />
+        <attr name="circleColor_CPB" format="color" />
+        <attr name="scaleColor_CPB" format="color" />
+        <attr name="fontSize_CPB" format="integer" />
+    </declare-styleable>
 
 
 </resources>
