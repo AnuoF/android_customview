@@ -170,6 +170,8 @@
         <attr name="circleColor_CPB" format="color" />
         <attr name="scaleColor_CPB" format="color" />
         <attr name="fontSize_CPB" format="integer" />
+        <attr name="fontColor_CPB" format="color" />
+        <attr name="margin_CPB" format="integer" />
     </declare-styleable>
 
 

@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnBothView.setOnClickListener(this);
         Button btnCompassDf = (Button) findViewById(R.id.btn_compass_df);
         btnCompassDf.setOnClickListener(this);
+        Button btnCircleProgressBar = (Button) findViewById(R.id.btn_circle_progress_bar);
+        btnCircleProgressBar.setOnClickListener(this);
     }
 
     @Override
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_compass_df:
                 startActivity(new Intent(this, ActivityDFCompassView.class));
+                break;
+            case R.id.btn_circle_progress_bar:
+                startActivity(new Intent(this, ActivityCircleProcessBar.class));
                 break;
 
             default:
