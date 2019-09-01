@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityCircleProcessBar"></activity>
+        <activity android:name=".ActivityRadarView"></activity>
+        <activity android:name=".ActivityCircleProcessBar" />
         <activity
             android:name=".ActivityDFCompassView"
             android:label="测向罗盘" />
