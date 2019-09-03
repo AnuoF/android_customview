@@ -35,37 +35,37 @@
 
         <Button
             android:id="@+id/btn_zoom_in"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="放大" />
 
         <Button
             android:id="@+id/btn_zoom_out"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="缩小" />
 
         <Button
             android:id="@+id/btn_offset_up"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="上移" />
 
         <Button
             android:id="@+id/btn_offset_down"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="下移" />
 
         <Button
             android:id="@+id/btn_auto"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="自动" />
 
         <Button
             android:id="@+id/btn_clear"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="清空" />
     </LinearLayout>

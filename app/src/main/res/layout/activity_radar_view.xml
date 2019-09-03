@@ -11,12 +11,14 @@
         android:id="@+id/radar_view1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#4D4B4B"
         android:layout_weight="1" />
 
     <com.an.view.RadarView
         android:id="@+id/radar_view2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#132513"
         android:layout_weight="1" />
 
 </LinearLayout>

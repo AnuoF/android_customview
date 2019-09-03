@@ -35,37 +35,37 @@
 
         <Button
             android:id="@+id/btn_zoom_in_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="放大" />
 
         <Button
             android:id="@+id/btn_zoom_out_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="缩小" />
 
         <Button
             android:id="@+id/btn_offset_up_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="上移" />
 
         <Button
             android:id="@+id/btn_offset_down_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="下移" />
 
         <Button
             android:id="@+id/btn_auto_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="自动" />
 
         <Button
             android:id="@+id/btn_clear_sv"
-            android:layout_width="55dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:text="清空" />
 
@@ -77,14 +77,14 @@
 
         <CheckBox
             android:id="@+id/cb_max"
-            android:layout_width="80dp"
+            android:layout_width="90dp"
             android:layout_height="50dp"
             android:checked="true"
             android:text="最大值" />
 
         <CheckBox
             android:id="@+id/cb_min"
-            android:layout_width="80dp"
+            android:layout_width="90dp"
             android:layout_height="50dp"
             android:checked="true"
             android:text="最小值" />
